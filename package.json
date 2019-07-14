@@ -4,7 +4,14 @@
   "description": "simulation for arduino to grab data from sensor and card, also do gate open/close using servo motor. combination of c++ (arduino). c# (ui desktop), php codeigniter (api server framework)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "syncpack": "syncpack",
+    "syncpack:list-mismatches": "syncpack list-mismatches",
+    "syncpack:fix-mismatches": "syncpack fix-mismatches",
+    "lerna:publish-package-local": "lerna publish from-package",
+    "lerna:bootstrap": "lerna bootstrap",
+    "lerna:bootstrap-yarn": "lerna bootstrap --npm-client=yarn",
+    "lerna:link": "lerna link",
+    "lerna:list": "lerna la"
   },
   "repository": {
     "type": "git",
@@ -24,6 +31,15 @@
   },
   "homepage": "https://github.com/maspinguin/parkforcampus#readme",
   "devDependencies": {
-    "lerna": "^3.15.0"
+    "lerna": "^3.15.0",
+    "gulp": "4.0.2",
+    "gulp-babel": "8.0.0",
+    "gulp-debug": "4.0.0",
+    "gulp-exec": "3.0.2",
+    "gulp-if": "2.0.2",
+    "gulp-merge-json": "1.3.1",
+    "gulp-replace": "1.0.0",
+    "syncpack": "^4.5.3",
+    "yargs": "13.2.4"
   }
 }
