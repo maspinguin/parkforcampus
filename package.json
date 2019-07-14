@@ -1,0 +1,29 @@
+{
+  "name": "parkforcampus",
+  "version": "1.0.0",
+  "description": "simulation for arduino to grab data from sensor and card, also do gate open/close using servo motor. combination of c++ (arduino). c# (ui desktop), php codeigniter (api server framework)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maspinguin/parkforcampus.git"
+  },
+  "keywords": [
+    "park",
+    "c#",
+    "c++",
+    "arduino",
+    "php"
+  ],
+  "author": "bangkit ilham maulana (Bangkit.ilhamz@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maspinguin/parkforcampus/issues"
+  },
+  "homepage": "https://github.com/maspinguin/parkforcampus#readme",
+  "devDependencies": {
+    "lerna": "^3.15.0"
+  }
+}
