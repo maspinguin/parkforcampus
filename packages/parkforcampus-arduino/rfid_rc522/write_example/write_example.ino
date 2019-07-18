@@ -60,7 +60,8 @@ void loop() {
     }
 
     if(command == "writeCard" && var1 != "") {
-            doWrite(var1, var2);
+       Serial.println(var1);
+       doWrite(var1, var2);
     }
 }
 
@@ -68,28 +69,38 @@ void doWrite(String var1, String var2) {
     if (RC522.isCard())
     {
       RC522.readCardSerial();
-      Serial.println("Card Detected");
-      for(int i=0;i<16;i++)
-      {
-        Serial.print(RC522.serNum[i],DEC);
-        Serial.print(" - ");
-        //Serial.print(RC522.serNum[i],HEX); //to print card detail in Hexa Decimal format
-      }
-      Serial.println();
-      Serial.println();
-      
-     // Serial.println(var1);
-      RC522.writeMFRC522(RC522.serNum[1], var1.toInt());
+//      Serial.println("Card Detected");
+//      for(int i=0;i<16;i++)
+//      {
+//        Serial.print(RC522.serNum[i],HEX);
+//        Serial.print(" - ");
+//        //Serial.print(RC522.serNum[i],HEX); //to print card detail in Hexa Decimal format
+//      }
+//    
+//      Serial.println();
+//      Serial.println();
+//      
+//     // Serial.println(var1);
+//      //RC522.writeMFRC522(RC522.serNum[2], var1.toInt());
+//
+//      for(int i=0;i<16;i++)
+//      {
+//        Serial.print(RC522.serNum[i],DEC);
+//        Serial.print(" - ");
+//        //Serial.print(RC522.serNum[i],HEX); //to print card detail in Hexa Decimal format
+//      }
+//      Serial.println();
+//      Serial.println();
+//      
+//      
 
-      for(int i=0;i<16;i++)
-      {
-        Serial.print(RC522.serNum[i],DEC);
-        Serial.print(" - ");
-        //Serial.print(RC522.serNum[i],HEX); //to print card detail in Hexa Decimal format
-      }
+       
+      RC522.write(2, 10);
       Serial.println();
       Serial.println();
-      
+      Serial.println("test: ");
+      Serial.println(RC522.serNum[2], DEC);
+       Serial.println(RC522.serNum[3], DEC);
       
       command = "";
       var1 = "";
