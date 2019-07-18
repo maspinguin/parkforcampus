@@ -9,7 +9,7 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
 MFRC522::MIFARE_Key oldKeyA;
 MFRC522::MIFARE_Key oldKeyB;
-MFRC522::MIFARE_Key newKeyA};
+MFRC522::MIFARE_Key newKeyA;
 MFRC522::MIFARE_Key newKeyB;
 
 void setup() {
@@ -80,7 +80,7 @@ void loop() {
   }
 
 
-void doWriteKey(String newKeyA, String newKeyB) {
+void doWriteKey(String _newKeyA, String _newKeyB, String _oldKeyA, String _oldKeyB) {
     if ( ! mfrc522.PICC_IsNewCardPresent()) {
         Serial.println("Please insert your new card ... ");
         delay(1000);
@@ -93,13 +93,71 @@ void doWriteKey(String newKeyA, String newKeyB) {
         return;
     } 
 
-    if(var3=="" && var4 == "") {
+    if(_oldKeyA=="" && _oldKeyB == "") {
       oldKeyA = {keyByte: {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};
       oldKeyB = {keyByte: {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};
     }
 
-    
+    // converting _newKeyA into &newKeyA
+    int str_len = _newKeyA.length() + 1; 
+    char cstr[str_len];
+    _newKeyA.toCharArray(cstr, str_len);
+    int y= 0;
+    String temp="", temp1="", temp2="";
+    for (int i=0 ; nibble2c(cstr[i])>=0 ; i++)
+   {
+      temp1 = String(cstr[i]);
+      temp2 = String(cstr[i+1]);
+      temp = "0x"+temp1+temp2;
+      if(nibble2c(cstr[i+1])>=0){
+         if(y < MFRC522::MF_KEY_SIZE) {
+          
+          Serial.println(temp);
+          char buffer[4];
+          temp.toCharArray(buffer, 4);
+          newKeyA.keyByte[y] =  buffer;
+         
+        }
+        //Serial.println();
+        temp ="";
+        i++;
+        y++;
+      }
+   }
 
+    Serial.println(newKeyA.keyByte[0], HEX);
+    Serial.println(newKeyA.keyByte[1], HEX);
+    Serial.println(newKeyA.keyByte[2], HEX);
+
+   // dump_byte_array(oldKeyA.keyByte, oldKeyA.keyByte.size);
+    
+    // Show some details of the PICC (that is: the tag/card)
+    Serial.print(F("Card UID:"));
+    dump_byte_array(mfrc522.uid.uidByte, mfrc522.uid.size);
+    Serial.println();
+    Serial.print(F("PICC type: "));
+    MFRC522::PICC_Type piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
+    Serial.println(mfrc522.PICC_GetTypeName(piccType));
+  
+    // Check for compatibility
+    if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI
+        && piccType != MFRC522::PICC_TYPE_MIFARE_1K
+        && piccType != MFRC522::PICC_TYPE_MIFARE_4K) {
+      Serial.println(F("This sample only works with MIFARE Classic cards."));
+      return;
+    }
+
+     // change keys in section 1 block 7
+//    if (!MIFARE_SetKeys(&oldKeyA, &oldKeyB, &newKeyA, &newKeyB, 1)) {
+//      return;
+//    }
+
+    // Halt PICC
+    mfrc522.PICC_HaltA();
+    // Stop encryption on PCD
+    mfrc522.PCD_StopCrypto1();
+
+    // reset variable
     command = "";
     var1="";
     var2="";
@@ -191,8 +249,6 @@ bool MIFARE_SetKeys(MFRC522::MIFARE_Key* oldKeyA, MFRC522::MIFARE_Key* oldKeyB,
 // END OF FUNCTION TO SET KEY
 
 
-
-
 //////////////////
 // HELPER ONLY //
 ////////////////
@@ -202,4 +258,37 @@ void dump_byte_array(byte* buffer, byte bufferSize) {
     Serial.print(buffer[i], HEX);
   }
 }
+
+
+char nibble2c(char c)
+{
+   if ((c>='0') && (c<='9'))
+      return c-'0' ;
+   if ((c>='A') && (c<='F'))
+      return c+10-'A' ;
+   if ((c>='a') && (c<='a'))
+      return c+10-'a' ;
+   return -1 ;
+}
+
+
+int x2i(char *s) 
+{
+ int x = 0;
+ for(;;) {
+   char c = *s;
+   if (c >= '0' && c <= '9') {
+      x *= 16;
+      x += c - '0'; 
+   }
+   else if (c >= 'A' && c <= 'F') {
+      x *= 16;
+      x += (c - 'A') + 10; 
+   }
+   else break;
+   s++;
+ }
+ return x;
+}
+
 // END OF HELPER //
