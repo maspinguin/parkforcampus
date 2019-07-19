@@ -26,7 +26,7 @@ String inputVars;
 
 String command = "";
 String var1="", var2="", var3="", var4="";
-char sz[] = "Here; is some; sample;100;data;1.414;1020";
+char sz[] = "writeNewKey;A0A1A2A3A4A5;B0B1B2B3B4B5;A0A1A2A3A4A5;B0B1B2B3B4B5";
 
 void loop() {
   if(Serial.available()){
@@ -96,39 +96,19 @@ void doWriteKey(String _newKeyA, String _newKeyB, String _oldKeyA, String _oldKe
     if(_oldKeyA=="" && _oldKeyB == "") {
       oldKeyA = {keyByte: {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};
       oldKeyB = {keyByte: {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};
+    } else {
+      oldKeyA = convertKeyStringToKeyByte(_oldKeyA);
+      oldKeyB = convertKeyStringToKeyByte(_oldKeyB);
+      Serial.println(_oldKeyA);
     }
 
     // converting _newKeyA into &newKeyA
-    int str_len = _newKeyA.length() + 1; 
-    char cstr[str_len];
-    _newKeyA.toCharArray(cstr, str_len);
-    int y= 0;
-    String temp="", temp1="", temp2="";
-    for (int i=0 ; nibble2c(cstr[i])>=0 ; i++)
-   {
-      temp1 = String(cstr[i]);
-      temp2 = String(cstr[i+1]);
-      temp = "0x"+temp1+temp2;
-      if(nibble2c(cstr[i+1])>=0){
-         if(y < MFRC522::MF_KEY_SIZE) {
-          
-          Serial.println(temp);
-          char buffer[4];
-          temp.toCharArray(buffer, 4);
-          newKeyA.keyByte[y] =  buffer;
-         
-        }
-        //Serial.println();
-        temp ="";
-        i++;
-        y++;
-      }
-   }
-
-    Serial.println(newKeyA.keyByte[0], HEX);
-    Serial.println(newKeyA.keyByte[1], HEX);
-    Serial.println(newKeyA.keyByte[2], HEX);
-
+    newKeyA = convertKeyStringToKeyByte(_newKeyA);
+    // converting _newKeyB into &newKeyB
+    newKeyB = convertKeyStringToKeyByte(_newKeyB);
+    
+    
+  
    // dump_byte_array(oldKeyA.keyByte, oldKeyA.keyByte.size);
     
     // Show some details of the PICC (that is: the tag/card)
@@ -146,11 +126,11 @@ void doWriteKey(String _newKeyA, String _newKeyB, String _oldKeyA, String _oldKe
       Serial.println(F("This sample only works with MIFARE Classic cards."));
       return;
     }
-
+    
      // change keys in section 1 block 7
-//    if (!MIFARE_SetKeys(&oldKeyA, &oldKeyB, &newKeyA, &newKeyB, 1)) {
-//      return;
-//    }
+    if (!MIFARE_SetKeys(&oldKeyA, &oldKeyB, &newKeyA, &newKeyB, 1)) {
+      return;
+    }
 
     // Halt PICC
     mfrc522.PICC_HaltA();
@@ -290,5 +270,37 @@ int x2i(char *s)
  }
  return x;
 }
+
+
+MFRC522::MIFARE_Key convertKeyStringToKeyByte(String _newKey) {
+   MFRC522::MIFARE_Key newKey;
+   int str_len = _newKey.length() + 1; 
+    char cstr[str_len];
+    _newKey.toCharArray(cstr, str_len);
+    int y= 0;
+   
+    for (int i=0 ; nibble2c(cstr[i])>=0 ; i++)
+    {
+      char c[4];
+          c[0] = '0';
+          c[1] = 'x';
+          c[2] = cstr[i];
+          c[3] = cstr[i+1];
+      if(nibble2c(cstr[i+1])>=0){
+         if(y < MFRC522::MF_KEY_SIZE) {
+          byte  bytes[2];
+          sscanf(c, "%04x", &bytes[0]);
+          newKey.keyByte[y] = bytes[0];
+         
+        }
+        //Serial.println();
+        
+        i++;
+        y++;
+      }
+    }
+    return newKey;
+}
+
 
 // END OF HELPER //
