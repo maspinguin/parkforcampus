@@ -11,6 +11,9 @@ MFRC522::MIFARE_Key oldKeyA;
 MFRC522::MIFARE_Key oldKeyB;
 MFRC522::MIFARE_Key newKeyA;
 MFRC522::MIFARE_Key newKeyB;
+MFRC522::MIFARE_Key keyA;
+MFRC522::MIFARE_Key keyB;
+
 
 void setup() {
   Serial.begin(9600);
@@ -26,7 +29,7 @@ String inputVars;
 
 String command = "";
 String var1="", var2="", var3="", var4="";
-char sz[] = "writeNewKey;A0A1A2A3A4A5;B0B1B2B3B4B5;A0A1A2A3A4A5;B0B1B2B3B4B5";
+char sz[] = "writeNewKey;A0A1A2A3A4A5;B0B1B2B3B4B5;3131313131313131313131313131313131313131313131313131313131313131;B0B1B2B3B4B5";
 
 void loop() {
   if(Serial.available()){
@@ -67,8 +70,8 @@ void loop() {
           
     }
 
-    if(command == "writeCard" && var1 != "") {
-       //doWrite(var1);
+    if(command == "writeCard" && var1 != ""&& var2 != ""&& var3 != "") {
+       doWrite(var1, var2, var3);
     }
 
     if(command == "writeNewKey" && var1 != ""&& var2 != "") {
@@ -79,6 +82,116 @@ void loop() {
     }
   }
 
+
+void doWrite(String _keyA, String _keyB, String value) {
+   if ( ! mfrc522.PICC_IsNewCardPresent()) {
+        Serial.println("Please insert your new card ... ");
+        delay(1000);
+        return;
+    }
+    // Select one of the cards
+    if ( ! mfrc522.PICC_ReadCardSerial()) {
+        Serial.println("Please insert your new card ... ");
+        delay(1000);
+        return;
+    } 
+
+    // converting _keyA into &keyA
+    keyA = convertKeyStringToKeyByte(_keyA);
+    // converting _keyB into &keyB
+    keyB = convertKeyStringToKeyByte(_keyB);
+
+
+     // In this sample we use the second sector,
+    // that is: sector #1, covering block #4 up to and including block #7
+    byte sector         = 1;
+    byte blockAddr      = 4;
+    byte dataBlock[]    = {
+        0x62, 0x61, 0x6e, 0x67, //  1,  2,   3,  4,
+        0x20, 0x06, 0x07, 0x08, //  5,  6,   7,  8,
+        0x09, 0x0a, 0xff, 0x0b, //  9, 10, 255, 11,
+        0x0c, 0x0d, 0x0e, 0x0f  // 12, 13, 14, 15
+    };
+    byte trailerBlock   = 7;
+    MFRC522::StatusCode status;
+    byte buffer[18];
+    byte size = sizeof(buffer);
+
+    
+    Serial.println(F("Authenticating using key A..."));
+    status = (MFRC522::StatusCode) mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &keyA , &(mfrc522.uid));
+    if (status != MFRC522::STATUS_OK) {
+        Serial.print(F("PCD_Authenticate() failed: "));
+        Serial.println(mfrc522.GetStatusCodeName(status));
+        return;
+    }
+
+    Serial.println(F("Authenticating again using key B..."));
+    status = (MFRC522::StatusCode) mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_B, trailerBlock, &keyB, &(mfrc522.uid));
+    if (status != MFRC522::STATUS_OK) {
+        Serial.print(F("PCD_Authenticate() failed: "));
+        Serial.println(mfrc522.GetStatusCodeName(status));
+        return;
+    }
+
+//    byte newData[16];
+    Serial.println(value);
+    convertStringHexToByte(value, dataBlock);
+    
+
+    Serial.print(F("Writing data into block ")); Serial.print(blockAddr);
+    Serial.println(F(" ..."));
+    dump_byte_array(dataBlock, 16); Serial.println();
+    status = (MFRC522::StatusCode) mfrc522.MIFARE_Write(blockAddr, dataBlock, 16);
+    if (status != MFRC522::STATUS_OK) {
+        Serial.print(F("MIFARE_Write() failed: "));
+        Serial.println(mfrc522.GetStatusCodeName(status));
+    }
+    Serial.println();
+
+     // Read data from the block (again, should now be what we have written)
+    Serial.print(F("Reading data from block ")); Serial.print(blockAddr);
+    Serial.println(F(" ..."));
+    status = (MFRC522::StatusCode) mfrc522.MIFARE_Read(blockAddr, buffer, &size);
+    if (status != MFRC522::STATUS_OK) {
+        Serial.print(F("MIFARE_Read() failed: "));
+        Serial.println(mfrc522.GetStatusCodeName(status));
+    }
+    Serial.print(F("Data in block ")); Serial.print(blockAddr); Serial.println(F(":"));
+    dump_byte_array(buffer, 16); Serial.println();
+
+    
+    // Check that data in block is what we have written
+    // by counting the number of bytes that are equal
+    Serial.println(F("Checking result..."));
+    byte count = 0;
+    for (byte i = 0; i < 16; i++) {
+        // Compare buffer (= what we've read) with dataBlock (= what we've written)
+        if (buffer[i] == dataBlock[i])
+            count++;
+    }
+    Serial.print(F("Number of bytes that match = ")); Serial.println(count);
+    if (count == 16) {
+        Serial.println(F("Success :-)"));
+    } else {
+        Serial.println(F("Failure, no match :-("));
+        Serial.println(F("  perhaps the write didn't work properly..."));
+    }
+
+    
+
+    // Halt PICC
+    mfrc522.PICC_HaltA();
+    // Stop encryption on PCD
+    mfrc522.PCD_StopCrypto1();
+
+    // reset variable
+    command = "";
+    var1="";
+    var2="";
+    var3="";
+    var4="";
+}
 
 void doWriteKey(String _newKeyA, String _newKeyB, String _oldKeyA, String _oldKeyB) {
     if ( ! mfrc522.PICC_IsNewCardPresent()) {
@@ -302,5 +415,33 @@ MFRC522::MIFARE_Key convertKeyStringToKeyByte(String _newKey) {
     return newKey;
 }
 
+void convertStringHexToByte(String _newKey, byte* newKey) {
+   int str_len = _newKey.length() + 1; 
+    char cstr[str_len];
+    _newKey.toCharArray(cstr, str_len);
+    int y= 0;
+   
+    for (int i=0 ; nibble2c(cstr[i])>=0 ; i++)
+    {
+      char c[4];
+          c[0] = '0';
+          c[1] = 'x';
+          c[2] = cstr[i];
+          c[3] = cstr[i+1];
+      if(nibble2c(cstr[i+1])>=0){
+         if(y < str_len/2) {
+          byte  bytes[2];
+          sscanf(c, "%04x", &bytes[0]);
+          newKey[y] = bytes[0];
+         
+        }
+        //Serial.println();
+        
+        i++;
+        y++;
+      }
+    }
+    
+}
 
 // END OF HELPER //
