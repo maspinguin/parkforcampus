@@ -17,20 +17,26 @@ class Auth extends CI_Controller {
 		} else {
 			$check_auth_client = $this->Api_model->check_auth_client();
 			if($check_auth_client == true){
-        // var_dump( (file_get_contents('php://input')))	;
+        	// var_dump( (file_get_contents('php://input')))	;
   				// var_dump($this->input->post('username'));
 
   			//get from raw data
-  				// $params = json_decode(file_get_contents('php://input'), true);
+			$params = json_decode(file_get_contents('php://input'), true);
 
   			//get from input post
-        $params = $_REQUEST;
-        $username = $params['username'];
-        $password = $params['password'];
-        // echo "sdsds";
+			//$params = $_REQUEST;
+			$username = '';
+			$password = '';
+			if(isset($params['username'])) {
+                $username = $params['username'];
+            }
 
-        $response = $this->Api_model->login($username,$password);
-        json_output($response['status'],$response);
+            if(isset($params['password'])) {
+                $password = $params['password'];
+			}
+
+			$response = $this->Api_model->login($username,$password);
+				json_output($response['status'],$response);
 			}
 		}
 	}

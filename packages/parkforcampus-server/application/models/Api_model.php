@@ -26,25 +26,25 @@ class Api_model extends CI_Model {
           return array('status' => 203 ,'message' => 'Field password is empty' );
         }
 
-        $q  = $this->db->select('password, id_user')->from('user')->where('username',$username)->get()->row();
+        $q  = $this->db->select('password, nomor_induk')->from('tbl_pengguna')->where('nomor_induk',$username)->get()->row();
         if($q == ""){
           return array('status' => 204,'message' => 'Username  not found.');
         } else {
             $hashed_password = $q->password;
-            $id              = $q->id_user;
+            $id              = $q->nomor_induk;
             if (hash_equals($hashed_password, md5($password))) {
                $last_login = date('Y-m-d H:i:s');
                $token = crypt(substr(md5(rand()), 0, 7),'');
                $expired_at = date("Y-m-d H:i:s", strtotime('+6 hours'));
                $this->db->trans_start();
-               $this->db->where('id_user',$id)->update('user',array('last_login' => $last_login));
-               $this->db->insert('users_authentication',array('id_user' => $id,'token' => $token,'expired_at' => $expired_at, 'created_at' => date('Y-m-d h:m:s'), 'status' => 1));
+               $this->db->where('nomor_induk',$id)->update('tbl_pengguna',array('last_login' => $last_login));
+               $this->db->insert('tbl_users_authentication',array('nomor_induk' => $id,'token' => $token,'expired_at' => $expired_at, 'created_at' => date('Y-m-d h:m:s'), 'status_id' => 1));
                if ($this->db->trans_status() === FALSE){
                   $this->db->trans_rollback();
                   return array('status' => 500,'message' => 'Internal server error.');
                } else {
                   $this->db->trans_commit();
-                  return array('status' => 200,'message' => 'Successfully login.','id_user' => $id, 'token' => $token);
+                  return array('status' => 200,'message' => 'Successfully login.','nomor_induk' => $id, 'token' => $token);
                }
             } else {
                return array('status' => 204,'message' => 'Wrong password.');
