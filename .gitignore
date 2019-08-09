@@ -36,3 +36,5 @@ package-lock.json
 composer.lock
 yarn.lock
 vendor/
+
+.idea/
