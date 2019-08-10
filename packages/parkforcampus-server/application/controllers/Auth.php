@@ -6,7 +6,6 @@ class Auth extends CI_Controller {
     	{
         	parent::__construct();
 			$this->load->model('Api_model', 'Api_model', TRUE);
-            $this->load->helper(['jwt', 'authorization']);
         }
 
 
@@ -18,25 +17,26 @@ class Auth extends CI_Controller {
 		} else {
 			$check_auth_client = $this->Api_model->check_auth_client();
 			if($check_auth_client == true){
-        	// var_dump( (file_get_contents('php://input')))	;
-  				// var_dump($this->input->post('username'));
+				// var_dump( (file_get_contents('php://input')))	;
+					// var_dump($this->input->post('username'));
 
-  			//get from raw data
-			$params = json_decode(file_get_contents('php://input'), true);
+				//get from raw data
+				$params = json_decode(file_get_contents('php://input'), true);
 
-  			//get from input post
-			//$params = $_REQUEST;
-			$username = '';
-			$password = '';
-			if(isset($params['username'])) {
-                $username = $params['username'];
-            }
+				//get from input post
+				//$params = $_REQUEST;
+				$username = '';
+				$password = '';
+				if(isset($params['username'])) {
+					$username = $params['username'];
+				}
 
-            if(isset($params['password'])) {
-                $password = $params['password'];
-			}
+				if(isset($params['password'])) {
+					$password = $params['password'];
+				}
 
-			$response = $this->Api_model->login($username,$password);
+				$response = $this->Api_model->login($username,$password);
+
 				json_output($response['status'],$response);
 			}
 		}

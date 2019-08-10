@@ -41,6 +41,22 @@ class Apimobile extends CI_Controller {
 		}
 	}
 
+	public function list_pengguna() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'GET'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                if($response['status'] == 200){
+                    $resp = array('data' => $this->Api_model->list_pengguna());
+                    json_output($response['status'], $resp);
+                }
+            }
+        }
+	}
+
 
 
 //  public function insert_pemeriksaan()

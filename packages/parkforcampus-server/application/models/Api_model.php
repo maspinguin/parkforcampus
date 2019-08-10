@@ -26,9 +26,12 @@ class Api_model extends CI_Model {
           return array('status' => 203 ,'message' => 'Field password is empty' );
         }
 
-        $q  = $this->db->select('password, nomor_induk')->from('tbl_pengguna')->where('nomor_induk',$username)->get()->row();
+        $q  = $this->db->select('password, nomor_induk')->from('tbl_pengguna')
+            ->where('nomor_induk',$username)
+            ->where('status_id', '1')
+            ->get()->row();
         if($q == ""){
-          return array('status' => 204,'message' => 'Username  not found.');
+          return array('status' => 403,'message' => 'Username inactive/ not found.');
         } else {
             $hashed_password = $q->password;
             $id              = $q->nomor_induk;
@@ -56,7 +59,7 @@ class Api_model extends CI_Model {
                   return array('status' => 200,'message' => 'Successfully login.','nomor_induk' => $id, 'token' => $newtoken);
                }
             } else {
-               return array('status' => 204,'message' => 'Wrong password.');
+               return array('status' => 403,'message' => 'Wrong password.');
             }
         }
     }
@@ -87,6 +90,12 @@ class Api_model extends CI_Model {
           return array('status' => 401 ,'message' => 'Unauthorized' );
         }
 
+        $last_logout = date('Y-m-d H:i:s');
+        $data = AUTHORIZATION::decode($token);
+        if(isset($data->nomor_induk)) {
+            $this->db->where('nomor_induk', $data->nomor_induk)->update('tbl_pengguna', array('last_logout'=> $last_logout));
+        }
+
         $this->db->where('token',$token)->update('tbl_users_authentication', array('status_id'=> 2));
         return array('status' => 200,'message' => 'Successfully logout.');
     }
@@ -98,160 +107,96 @@ class Api_model extends CI_Model {
         if($q == ""){
             return json_output(401,array('status' => 401,'message' => 'Unauthorized.'));
         } else {
-            if($q->expired_at < date('Y-m-d H:i:s')){
-                $this->db->where('token',$token)->update('tbl_users_authentication',array('status_id'=>'2'));
+            $data = AUTHORIZATION::decode($token);
+            if($data->expired_at < date('Y-m-d H:i:s')){
+                $updated_at = date('Y-m-d H:i:s');
+                $this->db->where('token',$token)->update('tbl_users_authentication',array('status_id'=>'2','updated_at' => $updated_at));
                 return json_output(401,array('status' => 401,'message' => 'Your session has been expired.'));
             } else {
                 $updated_at = date('Y-m-d H:i:s');
                 $expired_at = date("Y-m-d H:i:s", strtotime('+12 hours'));
-                $this->db->where('token',$token)->update('tbl_users_authentication',array('expired_at' => $expired_at,'updated_at' => $updated_at));
+                $this->db->where('token',$token)->update('tbl_users_authentication',array('updated_at' => $updated_at));
                 return array('status' => 200,'message' => 'Authorized.');
             }
         }
     }
 
-    public function pelanggan_all_data()
-    {
-        return $this->db->select('*')->from('pelanggan')->order_by('id_pel','asc')->get()->result();
-    }
-
-    public function material_all_data()
-    {
-        return $this->db->select('*')->from('material')->order_by('id_material','asc')->get()->result();
-    }
-
-    public function pemakaian_all_data()
-    {
-        return $this->db->select('*')->from('pemakaian')
-            ->join('pelanggan', 'pelanggan.id_pel = pemakaian.id_pelanggan')
-            ->order_by('id_pemakaian','asc')->get()->result();
-    }
-
-    public function pemeriksaan_all_data()
-    {
-      return $this->db->select('p.*,m.*, pl.nama_pel,pl.no_pelanggan,pl.alamat')
-      ->from('pemeriksaan as p,pemakaian as pm,material as m, pelanggan as pl')
-        ->where('p.id_pemakaian = pm.id_pemakaian')
-        ->where('pm.id_material = m.id_material')
-        ->where('pm.id_pelanggan = pl.id_pel')
-      // 0 segel, 1 belum diperiksa, 2 sudah diperiksa tidak segel
-        ->where('pm.statusid  = 1')
-        ->order_by('p.tanggal','desc')->get()->result();
-
-
-        // return $this->db->select('*')->from('pemeriksaan')->order_by('id_periksa','asc')->get()->result();
-    }
-
-    public function penyegelan_all_data()
-    {
-        return $this->db->select('*')->from('penyegelan')->order_by('id_segel','asc')->get()->result();
-    }
-
-    public function pelanggan_detail_data($id='')
-    {
-        return $this->db->select('*')->from('pelanggan')->where('id_pel',$id)->order_by('id_pel','desc')->get()->row();
-    }
-
-    public function material_detail_data($id='')
-    {
-        return $this->db->select('*')->from('material')->where('id_material',$id)->order_by('id_material','asc')->get()->row();
-    }
-
-    public function pemakaian_detail_data($id='')
-    {
-        return $this->db->select('*')->from('pemakaian')->where('id_pemakaian',$id)->order_by('id_pemakaian','asc')->get()->row();
-    }
-
-    public function pemeriksaan_detail_data($id='')
-    {
-      return $this->db->select('p.*,m.*, pl.nama_pel,pl.no_pelanggan,pl.alamat')
-      ->from('pemeriksaan as p,pemakaian as pm,material as m, pelanggan as pl')
-        ->where('p.id_pemakaian = pm.id_pemakaian')
-        ->where('pm.id_material = m.id_material')
-        ->where('pm.id_pelanggan = pl.id_pel')
-      // 0 segel, 1 belum diperiksa, 2 sudah diperiksa tidak segel
-
-        ->where('p.id_periksa',$id)
-        ->get()->result();
-
-        // return $this->db->select('*')->from('pemeriksaan')->where('id_periksa',$id)->order_by('id_periksa','asc')->get()->row();
-    }
-
-    public function penyegelan_detail_data($id='')
-    {
-        return $this->db->select('*')->from('penyegelan')->where('id_segel',$id)->order_by('id_segel','asc')->get()->row();
+    public function list_pengguna() {
+        return $this->db->query('
+            SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`
+            FROM `tbl_pengguna` as `p`, `tbl_mahasiswa` as `m`
+            WHERE `m`.`nim` = `p`.`nomor_induk` AND `p`.`status_id` = 1
+            UNION
+            SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`
+            FROM `tbl_pengguna` as `p`, `tbl_pegawai` as `m`
+            WHERE `m`.`nip` = `p`.`nomor_induk`
+            AND `p`.`status_id` = 1
+        ')->result();
     }
 
 
-
-    public function pemakaian_create_data($data)
-    {
-        $this->db->insert('pemakaian',$data);
-        return array('status' => 201,'message' => 'Data pemakaian has been created.');
-    }
-
-    public function pemeriksaan_create_data($data)
-    {
-        $this->db->insert('pemeriksaan',$data);
-        if($this->db->affected_rows() > 0){
-            $config['upload_path']          = 'asset/upload_pemeriksaan/';
-			$config['allowed_types']        = 'jpg';
-			$config['max_size']             = 8000;
-            $config['file_name']            = $this->db->insert_id().'.jpg';
-
-			$this->load->library('upload', $config);
-			if(!$this->upload->do_upload('foto')){
-				return array('status' =>403 , 'message'=> 'Data pemeriksaan telah dibuat. Gagal mengupload foto. '.$this->upload->display_errors('',''));
-			}
-
-            $data2['foto'] = $this->db->insert_id().".jpg";
-            $this->db->where('id_periksa', $this->db->insert_id());
-            $this->db->update('pemeriksaan', $data2);
-            if($this->db->affected_rows() > 0) {
-                return array('status' =>203 , 'message'=> 'Data Pemeriksaan Telah Dibuat');
-            }
-            return array('status' =>403 , 'message'=> 'Data pemeriksaan Telah Dibuat, nama foto belum terupdate');
-
-        }
-        else{
-            return array('status' =>403 , 'message'=> 'Gagal membuat data pemeriksaan');
-        }
-        // return array('status' => 201,'message' => 'Data pemeriksaan has been created.');
-    }
-
-    public function penyegelan_create_data($data)
-    {
-        $this->db->insert('penyegelan',$data);
-        if($this->db->affected_rows() > 0)
-        {
-            $dataedit = array('statusid' => '0');
-
-            $this->db->where('id_pemakaian', $data['id_pemakaian']);
-            $this->db->update('pemakaian', $dataedit);
-
-            $this->db->trans_complete();
-
-            if($this->db->affected_rows() > 0)
-            {
-                // return TRUE;
-                return array('status' => 203,'message' => 'Data penyegelan has been created.');
-            }
-            else
-            {
-              if ($this->db->trans_status() === FALSE) {
-                  return array('status' => 403,'message' => 'Data penyegelan failed to add.');
-
-                // return FALSE;
-              }else{
-                  return array('status' => 203,'message' => 'Data penyegelan has been created.');
-                // return TRUE;
-              }
-          }
-      }else {
-          return array('status' => 403,'message' => 'Data penyegelan failed to add.');
-      }
-
-    }
+//    public function pemeriksaan_create_data($data)
+//    {
+//        $this->db->insert('pemeriksaan',$data);
+//        if($this->db->affected_rows() > 0){
+//            $config['upload_path']          = 'asset/upload_pemeriksaan/';
+//			$config['allowed_types']        = 'jpg';
+//			$config['max_size']             = 8000;
+//            $config['file_name']            = $this->db->insert_id().'.jpg';
+//
+//			$this->load->library('upload', $config);
+//			if(!$this->upload->do_upload('foto')){
+//				return array('status' =>403 , 'message'=> 'Data pemeriksaan telah dibuat. Gagal mengupload foto. '.$this->upload->display_errors('',''));
+//			}
+//
+//            $data2['foto'] = $this->db->insert_id().".jpg";
+//            $this->db->where('id_periksa', $this->db->insert_id());
+//            $this->db->update('pemeriksaan', $data2);
+//            if($this->db->affected_rows() > 0) {
+//                return array('status' =>203 , 'message'=> 'Data Pemeriksaan Telah Dibuat');
+//            }
+//            return array('status' =>403 , 'message'=> 'Data pemeriksaan Telah Dibuat, nama foto belum terupdate');
+//
+//        }
+//        else{
+//            return array('status' =>403 , 'message'=> 'Gagal membuat data pemeriksaan');
+//        }
+//        // return array('status' => 201,'message' => 'Data pemeriksaan has been created.');
+//    }
+//
+//    public function penyegelan_create_data($data)
+//    {
+//        $this->db->insert('penyegelan',$data);
+//        if($this->db->affected_rows() > 0)
+//        {
+//            $dataedit = array('statusid' => '0');
+//
+//            $this->db->where('id_pemakaian', $data['id_pemakaian']);
+//            $this->db->update('pemakaian', $dataedit);
+//
+//            $this->db->trans_complete();
+//
+//            if($this->db->affected_rows() > 0)
+//            {
+//                // return TRUE;
+//                return array('status' => 203,'message' => 'Data penyegelan has been created.');
+//            }
+//            else
+//            {
+//              if ($this->db->trans_status() === FALSE) {
+//                  return array('status' => 403,'message' => 'Data penyegelan failed to add.');
+//
+//                // return FALSE;
+//              }else{
+//                  return array('status' => 203,'message' => 'Data penyegelan has been created.');
+//                // return TRUE;
+//              }
+//          }
+//      }else {
+//          return array('status' => 403,'message' => 'Data penyegelan failed to add.');
+//      }
+//
+//    }
 
     // public function pelanggan_update_data($id,$data)
     // {
