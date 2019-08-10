@@ -121,8 +121,8 @@ class Api_model extends CI_Model {
         }
     }
 
-    public function list_pengguna() {
-        return $this->db->query('
+    public function list_pengguna($start=null, $limit=null, $order='asc') {
+        $query = "
             SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`
             FROM `tbl_pengguna` as `p`, `tbl_mahasiswa` as `m`
             WHERE `m`.`nim` = `p`.`nomor_induk` AND `p`.`status_id` = 1
@@ -130,8 +130,14 @@ class Api_model extends CI_Model {
             SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`
             FROM `tbl_pengguna` as `p`, `tbl_pegawai` as `m`
             WHERE `m`.`nip` = `p`.`nomor_induk`
-            AND `p`.`status_id` = 1
-        ')->result();
+            AND `p`.`status_id` = 1";
+        if(isset($order)) {
+            $query.= " ORDER BY id ".$order;
+        }
+        if(isset($start) && isset($limit)) {
+            $query.= " LIMIT ".$limit." OFFSET ".$start;
+        }
+        return $this->db->query($query)->result();
     }
 
 

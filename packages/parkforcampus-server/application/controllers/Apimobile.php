@@ -50,7 +50,22 @@ class Apimobile extends CI_Controller {
             if($check_auth_client == true){
                 $response = $this->Api_model->auth();
                 if($response['status'] == 200){
-                    $resp = array('data' => $this->Api_model->list_pengguna());
+                	$params = json_decode(file_get_contents('php://input'), true);
+
+					//get from input post
+	//				$params = $_REQUEST;
+					$start = null ;
+					$limit = null ;
+					$orderBy = null;
+                	if(isset($params['start']) && isset($params['limit'])) {
+                		$start = $params['start'];
+                		$limit = $params['limit'];
+                	}
+
+                	if(isset($params['orderBy'])) {
+                		$orderBy = $params['orderBy'];
+					}
+                    $resp = array('data' => $this->Api_model->list_pengguna($start, $limit, $orderBy));
                     json_output($response['status'], $resp);
                 }
             }
