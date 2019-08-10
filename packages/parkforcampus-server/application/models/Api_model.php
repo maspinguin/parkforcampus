@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Api_model extends CI_Model {
 
     var $client_service = "frontend-client";
-    var $auth_key       = "ap3tl";
+    var $auth_key       = "parkir_sttar";
 
     public function check_auth_client(){
         $client_service = $this->input->get_request_header('Client-Service', TRUE);
@@ -59,7 +59,7 @@ class Api_model extends CI_Model {
         return array('status' => 203 ,'message' => 'Field token is empty' );
       }
 
-      $q  = $this->db->select('id_user,expired_at')->from('users_authentication')->where('token',$token)->where('status', '1')->get()->row();
+      $q  = $this->db->select('nomor_induk,expired_at')->from('tbl_users_authentication')->where('token',$token)->where('status_id', '1')->get()->row();
       if($q == ""){
         return array('status' => 204,'message' => 'Token not found.');
       } else {
@@ -73,32 +73,29 @@ class Api_model extends CI_Model {
 
     public function logout()
     {
-
-        $users_id  = $this->input->get_request_header('User-ID', TRUE);
         $token     = $this->input->get_request_header('Authorization', TRUE);
-        if(empty($users_id) || empty($token)){
+        if(empty($token)){
           return array('status' => 401 ,'message' => 'Unauthorized' );
         }
 
-
-        $this->db->where('id_user',$users_id)->where('token',$token)->update('users_authentication', array('status'=> 2));
+        $this->db->where('token',$token)->update('tbl_users_authentication', array('status_id'=> 2));
         return array('status' => 200,'message' => 'Successfully logout.');
     }
 
     public function auth()
     {
-        $users_id  = $this->input->get_request_header('User-ID', TRUE);
         $token     = $this->input->get_request_header('Authorization', TRUE);
-        $q  = $this->db->select('expired_at')->from('users_authentication')->where('id_user',$users_id)->where('token',$token)->where('status','1')->get()->row();
+        $q  = $this->db->select('expired_at')->from('tbl_users_authentication')->where('token',$token)->where('status_id','1')->get()->row();
         if($q == ""){
             return json_output(401,array('status' => 401,'message' => 'Unauthorized.'));
         } else {
             if($q->expired_at < date('Y-m-d H:i:s')){
+                $this->db->where('token',$token)->update('tbl_users_authentication',array('status_id'=>'2'));
                 return json_output(401,array('status' => 401,'message' => 'Your session has been expired.'));
             } else {
                 $updated_at = date('Y-m-d H:i:s');
                 $expired_at = date("Y-m-d H:i:s", strtotime('+12 hours'));
-                $this->db->where('id_user',$users_id)->where('token',$token)->update('users_authentication',array('expired_at' => $expired_at,'updated_at' => $updated_at));
+                $this->db->where('token',$token)->update('tbl_users_authentication',array('expired_at' => $expired_at,'updated_at' => $updated_at));
                 return array('status' => 200,'message' => 'Authorized.');
             }
         }

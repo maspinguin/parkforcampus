@@ -5,7 +5,7 @@ class Auth extends CI_Controller {
 	public function __construct()
     	{
         	parent::__construct();
-		$this->load->model('Api_model', 'Api_model', TRUE);
+			$this->load->model('Api_model', 'Api_model', TRUE);
 	    }
 
 
@@ -52,25 +52,20 @@ class Auth extends CI_Controller {
 					// var_dump($this->input->post('username'));
 
 				//get from raw data
-					// $params = json_decode(file_get_contents('php://input'), true);
+				$params = json_decode(file_get_contents('php://input'), true);
 
 				//get from input post
-				$params = $_REQUEST;
-				$token = $params['token'];
-				// echo "sdsds";
+//				$params = $_REQUEST;
+				$token = '';
+                if(isset($params['token'])) {
+                    $token = $params['token'];
+                }
 
 				$response = $this->Api_model->checkToken($token);
 				json_output($response['status'],$response);
 			}
 		}
 	}
-
-	public function tes()
-	{
-		echo "Hello";
-		// code...
-	}
-
 
 
 	public function logout()
