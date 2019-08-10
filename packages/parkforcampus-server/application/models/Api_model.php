@@ -121,16 +121,40 @@ class Api_model extends CI_Model {
         }
     }
 
-    public function list_pengguna($start=null, $limit=null, $order='asc') {
+    public function list_pengguna($type = null,$start=null, $limit=null, $order='asc') {
         $query = "
-            SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`
+            SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`, `p`.`id_type`
             FROM `tbl_pengguna` as `p`, `tbl_mahasiswa` as `m`
-            WHERE `m`.`nim` = `p`.`nomor_induk` AND `p`.`status_id` = 1
+            WHERE `m`.`nim` = `p`.`nomor_induk` AND `p`.`status_id` = 1";
+        if(isset($type)) {
+            $typeres = $this->db->select('keterangan, id')->from('tbl_type_pengguna')
+                ->where('keterangan',$type)
+                ->where('status_id', '1')
+                ->get()->row();
+
+            if($typeres != "") {
+                $query.= " AND p.id_type = ".$typeres->id;
+            }
+
+        }
+
+        $query.="
             UNION
-            SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`
+            SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`, `p`.`id_type`
             FROM `tbl_pengguna` as `p`, `tbl_pegawai` as `m`
             WHERE `m`.`nip` = `p`.`nomor_induk`
             AND `p`.`status_id` = 1";
+        if(isset($type)) {
+            $typeres = $this->db->select('keterangan, id')->from('tbl_type_pengguna')
+                ->where('keterangan',$type)
+                ->where('status_id', '1')
+                ->get()->row();
+
+            if($typeres != "") {
+                $query.= " AND p.id_type = ".$typeres->id;
+            }
+
+        }
         if(isset($order)) {
             $query.= " ORDER BY id ".$order;
         }

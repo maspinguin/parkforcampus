@@ -57,6 +57,10 @@ class Apimobile extends CI_Controller {
 					$start = null ;
 					$limit = null ;
 					$orderBy = null;
+					$type = null;
+					if(isset($params['tipe'])) {
+						$type = $params['tipe'];
+					}
                 	if(isset($params['start']) && isset($params['limit'])) {
                 		$start = $params['start'];
                 		$limit = $params['limit'];
@@ -65,7 +69,7 @@ class Apimobile extends CI_Controller {
                 	if(isset($params['orderBy'])) {
                 		$orderBy = $params['orderBy'];
 					}
-                    $resp = array('data' => $this->Api_model->list_pengguna($start, $limit, $orderBy));
+                    $resp = array('data' => $this->Api_model->list_pengguna($type, $start, $limit, $orderBy));
                     json_output($response['status'], $resp);
                 }
             }
