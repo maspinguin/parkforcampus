@@ -6,7 +6,8 @@ class Auth extends CI_Controller {
     	{
         	parent::__construct();
 			$this->load->model('Api_model', 'Api_model', TRUE);
-	    }
+            $this->load->helper(['jwt', 'authorization']);
+        }
 
 
 	public function login()
