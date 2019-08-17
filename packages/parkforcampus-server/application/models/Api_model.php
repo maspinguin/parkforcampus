@@ -164,85 +164,90 @@ class Api_model extends CI_Model {
         return $this->db->query($query)->result();
     }
 
+    public function list_pegawai($start=null, $limit=null, $order='asc') {
+        $query = "
+            SELECT *
+            FROM `tbl_pegawai`
+            WHERE `status_id` = 1";
 
-//    public function pemeriksaan_create_data($data)
-//    {
-//        $this->db->insert('pemeriksaan',$data);
-//        if($this->db->affected_rows() > 0){
-//            $config['upload_path']          = 'asset/upload_pemeriksaan/';
-//			$config['allowed_types']        = 'jpg';
-//			$config['max_size']             = 8000;
-//            $config['file_name']            = $this->db->insert_id().'.jpg';
-//
-//			$this->load->library('upload', $config);
-//			if(!$this->upload->do_upload('foto')){
-//				return array('status' =>403 , 'message'=> 'Data pemeriksaan telah dibuat. Gagal mengupload foto. '.$this->upload->display_errors('',''));
-//			}
-//
-//            $data2['foto'] = $this->db->insert_id().".jpg";
-//            $this->db->where('id_periksa', $this->db->insert_id());
-//            $this->db->update('pemeriksaan', $data2);
-//            if($this->db->affected_rows() > 0) {
-//                return array('status' =>203 , 'message'=> 'Data Pemeriksaan Telah Dibuat');
-//            }
-//            return array('status' =>403 , 'message'=> 'Data pemeriksaan Telah Dibuat, nama foto belum terupdate');
-//
-//        }
-//        else{
-//            return array('status' =>403 , 'message'=> 'Gagal membuat data pemeriksaan');
-//        }
-//        // return array('status' => 201,'message' => 'Data pemeriksaan has been created.');
-//    }
-//
-//    public function penyegelan_create_data($data)
-//    {
-//        $this->db->insert('penyegelan',$data);
-//        if($this->db->affected_rows() > 0)
-//        {
-//            $dataedit = array('statusid' => '0');
-//
-//            $this->db->where('id_pemakaian', $data['id_pemakaian']);
-//            $this->db->update('pemakaian', $dataedit);
-//
-//            $this->db->trans_complete();
-//
-//            if($this->db->affected_rows() > 0)
-//            {
-//                // return TRUE;
-//                return array('status' => 203,'message' => 'Data penyegelan has been created.');
-//            }
-//            else
-//            {
-//              if ($this->db->trans_status() === FALSE) {
-//                  return array('status' => 403,'message' => 'Data penyegelan failed to add.');
-//
-//                // return FALSE;
-//              }else{
-//                  return array('status' => 203,'message' => 'Data penyegelan has been created.');
-//                // return TRUE;
-//              }
-//          }
-//      }else {
-//          return array('status' => 403,'message' => 'Data penyegelan failed to add.');
-//      }
-//
-//    }
+        if(isset($order)) {
+            $query.= " ORDER BY id ".$order;
+        }
+        if(isset($start) && isset($limit)) {
+            $query.= " LIMIT ".$limit." OFFSET ".$start;
+        }
+        return $this->db->query($query)->result();
+    }
 
-    // public function pelanggan_update_data($id,$data)
-    // {
-    //     $this->db->where('id_pel',$id)->update('pelanggan',$data);
-    //     return array('status' => 200,'message' => 'Data pelanggan has been updated.');
-    // }
-    //
-    // public function pelanggan_delete_data($id)
-    // {
-    //     $this->db->where('id_pel',$id)->delete('pelanggan');
-    //     return array('status' => 200,'message' => 'Data pelanggan has been deleted.');
-    // }
+    public function list_mahasiswa($start=null, $limit=null, $order='asc') {
+        $query = "
+            SELECT *
+            FROM `tbl_mahasiswa`
+            WHERE `status_id` = 1";
+
+        if(isset($order)) {
+            $query.= " ORDER BY id ".$order;
+        }
+        if(isset($start) && isset($limit)) {
+            $query.= " LIMIT ".$limit." OFFSET ".$start;
+        }
+        return $this->db->query($query)->result();
+    }
+
+    public function list_type_pengguna() {
+
+        return $this->db->select('*')->from('tbl_type_pengguna')->where('status_id', '1')->get()->result();
+    }
+
+    public function insert_mahasiswa($data) {
+        $q  = $this->db->select('*')->from('tbl_mahasiswa')
+            ->where('nim',$data['nim'])
+            ->where('status_id', '1')
+            ->get()->row();
+        if($q == ""){
+            $this->db->insert('tbl_mahasiswa', $data);
+            if($this->db->affected_rows() > 0) {
+                return array('status' =>200 , 'message'=> 'Data mahasiswa telah dibuat');
+            }
+
+        } else {
+            return array('status' => 400,'message' => 'Data dengan nim sudah ada!');
+        }
 
 
+    }
 
+    public function update_mahasiswa($data) {
+        $q  = $this->db->select('*')->from('tbl_mahasiswa')
+            ->where('nim',$data['nim'])
+            ->where('status_id', '1')
+            ->get()->row();
+        if($q == ""){
+            return array('status' => 400,'message' => 'Data tidak ditemukan');
+        } else {
+            $this->db->where('nim', $data['nim'])->where('status_id', '1')->update('tbl_mahasiswa', $data);
+            if($this->db->affected_rows() > 0) {
+                return array('status' =>200 , 'message'=> 'Data mahasiswa telah diubah');
+            } else {
+                return array('status' => 400, 'message' => 'No data has updated.');
+            }
+        }
+    }
 
-
-
+    public function delete_mahasiswa($data) {
+        $q  = $this->db->select('*')->from('tbl_mahasiswa')
+            ->where('nim',$data['nim'])
+            ->where('status_id', '1')
+            ->get()->row();
+        if($q == ""){
+            return array('status' => 400,'message' => 'Data tidak ditemukan');
+        } else {
+            $this->db->where('nim', $data['nim'])->where('status_id', '1')->update('tbl_mahasiswa', $data);
+            if($this->db->affected_rows() > 0) {
+                return array('status' =>200 , 'message'=> 'Data mahasiswa telah terhapus');
+            } else {
+                return array('status' => 400, 'message' => 'No data has deleted.');
+            }
+        }
+    }
 }

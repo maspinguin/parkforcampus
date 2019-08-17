@@ -43,7 +43,7 @@ class Apimobile extends CI_Controller {
 
 	public function list_pengguna() {
         $method = $_SERVER['REQUEST_METHOD'];
-        if($method != 'GET'){
+        if($method != 'POST'){
             json_output(400,array('status' => 400,'message' => 'Bad request.'));
         } else {
             $check_auth_client = $this->Api_model->check_auth_client();
@@ -76,6 +76,221 @@ class Apimobile extends CI_Controller {
         }
 	}
 
+    public function list_pegawai() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                if($response['status'] == 200){
+                    $params = json_decode(file_get_contents('php://input'), true);
+
+                    //get from input post
+                    //				$params = $_REQUEST;
+                    $start = null ;
+                    $limit = null ;
+                    $orderBy = null;
+                    if(isset($params['start']) && isset($params['limit'])) {
+                        $start = $params['start'];
+                        $limit = $params['limit'];
+                    }
+
+                    if(isset($params['orderBy'])) {
+                        $orderBy = $params['orderBy'];
+                    }
+                    $resp = array('data' => $this->Api_model->list_pegawai($start, $limit, $orderBy));
+                    json_output($response['status'], $resp);
+                }
+            }
+        }
+    }
+
+    public function list_mahasiswa() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                if($response['status'] == 200){
+                    $params = json_decode(file_get_contents('php://input'), true);
+
+                    //get from input post
+                    //				$params = $_REQUEST;
+                    $start = null ;
+                    $limit = null ;
+                    $orderBy = null;
+                    if(isset($params['start']) && isset($params['limit'])) {
+                        $start = $params['start'];
+                        $limit = $params['limit'];
+                    }
+
+                    if(isset($params['orderBy'])) {
+                        $orderBy = $params['orderBy'];
+                    }
+                    $resp = array('data' => $this->Api_model->list_mahasiswa($start, $limit, $orderBy));
+                    json_output($response['status'], $resp);
+                }
+            }
+        }
+    }
+
+	public function list_type_pengguna() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'GET'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                if($response['status'] == 200){
+                    $resp = array('data' => $this->Api_model->list_type_pengguna());
+                    json_output($response['status'], $resp);
+                }
+            }
+        }
+	}
+
+	public function insert_mahasiswa() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                if($response['status'] == 200){
+                    $params = json_decode(file_get_contents('php://input'), true);
+
+                    $nim = null ;
+                    $nama = null ;
+                    $alamat = null;
+                    $email = null;
+                    if(!isset($params['nim']) || $params['nim'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nim tidak ada' ));
+                    } else {
+                        $nim = $params['nim'];
+                    }
+
+                    if(!isset($params['nama']) || $params['nama'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nama tidak ada' ));
+                    } else {
+                        $nama = $params['nama'];
+                    }
+
+                    if(!isset($params['email']) || $params['email'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'email tidak ada' ));
+                    } else {
+                        $email = $params['email'];
+                    }
+
+                    if(!isset($params['alamat']) || $params['alamat'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'alamat tidak ada' ));
+                    } else {
+                        $alamat = $params['alamat'];
+                    }
+
+                    $newData = array(
+                        'nim' => $nim,
+                        'nama' => $nama,
+                        'alamat' => $alamat,
+                        'email' => $email,
+                        'status_id' => 1
+                    );
+
+                    $resp = array('data' => $this->Api_model->insert_mahasiswa($newData));
+                    json_output($response['status'], $resp);
+                }
+            }
+        }
+	}
+
+    public function update_mahasiswa() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'PUT'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                if($response['status'] == 200){
+                    $params = json_decode(file_get_contents('php://input'), true);
+
+                    $nim = null ;
+                    $nama = null ;
+                    $alamat = null;
+                    $email = null;
+                    if(!isset($params['nim']) || $params['nim'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nim tidak ada' ));
+                    } else {
+                        $nim = $params['nim'];
+                    }
+
+                    if(!isset($params['nama']) || $params['nama'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nama tidak ada' ));
+                    } else {
+                        $nama = $params['nama'];
+                    }
+
+                    if(!isset($params['email']) || $params['email'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'email tidak ada' ));
+                    } else {
+                        $email = $params['email'];
+                    }
+
+                    if(!isset($params['alamat']) || $params['alamat'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'alamat tidak ada' ));
+                    } else {
+                        $alamat = $params['alamat'];
+                    }
+
+                    $newData = array(
+                        'nim' => $nim,
+                        'nama' => $nama,
+                        'alamat' => $alamat,
+                        'email' => $email
+                    );
+
+                    $resp = array('data' => $this->Api_model->update_mahasiswa($newData));
+                    json_output($response['status'], $resp);
+                }
+            }
+        }
+    }
+
+    public function delete_mahasiswa()
+    {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if ($method != 'DELETE') {
+            json_output(400, array('status' => 400, 'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true) {
+                $response = $this->Api_model->auth();
+                if ($response['status'] == 200) {
+                    $params = json_decode(file_get_contents('php://input'), true);
+
+                    $nim = null ;
+                    if(!isset($params['nim']) || $params['nim'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nim tidak ada' ));
+                    } else {
+                        $nim = $params['nim'];
+                    }
+
+                    $newData = array(
+                        'nim' => $nim,
+                        'status_id' => 0
+                    );
+
+                    $resp = array('data' => $this->Api_model->delete_mahasiswa($newData));
+                    json_output($response['status'], $resp);
+                }
+            }
+        }
+    }
 
 
 //  public function insert_pemeriksaan()
