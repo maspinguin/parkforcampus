@@ -250,4 +250,56 @@ class Api_model extends CI_Model {
             }
         }
     }
+
+    public function insert_pegawai($data) {
+        $q  = $this->db->select('*')->from('tbl_pegawai')
+            ->where('nip',$data['nip'])
+            ->where('status_id', '1')
+            ->get()->row();
+        if($q == ""){
+            $this->db->insert('tbl_pegawai', $data);
+            if($this->db->affected_rows() > 0) {
+                return array('status' =>200 , 'message'=> 'Data pegawai telah dibuat');
+            }
+
+        } else {
+            return array('status' => 400,'message' => 'Data dengan nip sudah ada!');
+        }
+
+
+    }
+
+    public function update_pegawai($data) {
+        $q  = $this->db->select('*')->from('tbl_pegawai')
+            ->where('nip',$data['nip'])
+            ->where('status_id', '1')
+            ->get()->row();
+        if($q == ""){
+            return array('status' => 400,'message' => 'Data tidak ditemukan');
+        } else {
+            $this->db->where('nip', $data['nip'])->where('status_id', '1')->update('tbl_pegawai', $data);
+            if($this->db->affected_rows() > 0) {
+                return array('status' =>200 , 'message'=> 'Data pegawai telah diubah');
+            } else {
+                return array('status' => 400, 'message' => 'No data has updated.');
+            }
+        }
+    }
+
+    public function delete_pegawai($data) {
+        $q  = $this->db->select('*')->from('tbl_pegawai')
+            ->where('nip',$data['nip'])
+            ->where('status_id', '1')
+            ->get()->row();
+        if($q == ""){
+            return array('status' => 400,'message' => 'Data tidak ditemukan');
+        } else {
+            $this->db->where('nip', $data['nip'])->where('status_id', '1')->update('tbl_pegawai', $data);
+            if($this->db->affected_rows() > 0) {
+                return array('status' =>200 , 'message'=> 'Data pegawai telah terhapus');
+            } else {
+                return array('status' => 400, 'message' => 'No data has deleted.');
+            }
+        }
+    }
 }
