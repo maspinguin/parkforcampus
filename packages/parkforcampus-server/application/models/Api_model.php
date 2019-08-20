@@ -579,7 +579,7 @@ class Api_model extends CI_Model {
                 try {
                     $data['waktu'] = date('Y-m-d H:i:s');
                     $data['status_id'] = 1;
-                    $data['created_at'] = date('Y-m-d H:i:s');
+                    $data = $this->crud_info($data, "create");
                     $this->db->insert('tbl_parkir', $data);
                     return array('status'=>200, 'command'=>'open_portal_masuk', 'message'=>'success proses parkir');
                 } catch(Exception $err) {
@@ -600,13 +600,14 @@ class Api_model extends CI_Model {
             } else {
                 $data['waktu'] = date('Y-m-d H:i:s');
                 $data['status_id'] = 1;
-                $data['created_at'] = date('Y-m-d H:i:s');
+                $data = $this->crud_info($data, "create");
                 $this->db->insert('tbl_parkir', $data);
 
                 $newData = array(
                     'status_id'=> 2,
                     'updated_at'=> date('Y-m-d H:i:s')
                 );
+                $newData = $this->crud_info($newData, "update");
                 $this->db
                     ->where('nomor_induk', $data['nomor_induk'])
                     ->where('status_id', 1)
