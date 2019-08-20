@@ -178,7 +178,8 @@ class Apimobile extends CI_Controller {
             $check_auth_client = $this->Api_model->check_auth_client();
             if($check_auth_client == true){
                 $response = $this->Api_model->auth();
-                if($response['status'] == 200){
+                $response2 = $this->Api_model->authAdmin();
+                if($response['status'] == 200 && $response2['status'] == 200){
                     $params = json_decode(file_get_contents('php://input'), true);
 
                     $nim = null ;
@@ -232,7 +233,8 @@ class Apimobile extends CI_Controller {
             $check_auth_client = $this->Api_model->check_auth_client();
             if($check_auth_client == true){
                 $response = $this->Api_model->auth();
-                if($response['status'] == 200){
+                $response2 = $this->Api_model->authAdmin();
+                if($response['status'] == 200 && $response2['status'] == 200){
                     $params = json_decode(file_get_contents('php://input'), true);
 
                     $nim = null ;
@@ -286,7 +288,8 @@ class Apimobile extends CI_Controller {
             $check_auth_client = $this->Api_model->check_auth_client();
             if($check_auth_client == true) {
                 $response = $this->Api_model->auth();
-                if ($response['status'] == 200) {
+                $response2 = $this->Api_model->authAdmin();
+                if ($response['status'] == 200 && $response2['status'] == 200) {
                     $params = json_decode(file_get_contents('php://input'), true);
 
                     $nim = null ;
@@ -317,7 +320,8 @@ class Apimobile extends CI_Controller {
             $check_auth_client = $this->Api_model->check_auth_client();
             if($check_auth_client == true){
                 $response = $this->Api_model->auth();
-                if($response['status'] == 200){
+                $response2 = $this->Api_model->authAdmin();
+                if($response['status'] == 200 && $response2['status'] == 200){
                     $params = json_decode(file_get_contents('php://input'), true);
 
                     $nip = null ;
@@ -371,7 +375,8 @@ class Apimobile extends CI_Controller {
             $check_auth_client = $this->Api_model->check_auth_client();
             if($check_auth_client == true){
                 $response = $this->Api_model->auth();
-                if($response['status'] == 200){
+                $response2 = $this->Api_model->authAdmin();
+                if($response['status'] == 200 && $response2['status'] == 200){
                     $params = json_decode(file_get_contents('php://input'), true);
 
                     $nip = null ;
@@ -425,7 +430,8 @@ class Apimobile extends CI_Controller {
             $check_auth_client = $this->Api_model->check_auth_client();
             if($check_auth_client == true) {
                 $response = $this->Api_model->auth();
-                if ($response['status'] == 200) {
+                $response2 = $this->Api_model->authAdmin();
+                if ($response['status'] == 200 && $response2['status'] == 200) {
                     $params = json_decode(file_get_contents('php://input'), true);
 
                     $nim = null ;
@@ -576,6 +582,74 @@ class Apimobile extends CI_Controller {
 
                     $resp = array('data' => $this->Api_model->delete_pengguna($newData));
                     json_output($resp['data']['status'], $resp);
+                }
+            }
+        }
+    }
+
+    public function check_nomor_induk($nomor_induk = null) {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'GET'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                if($response['status'] == 200){
+
+                    if($nomor_induk == null) {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nomor_induk tidak ada' ));
+                    }
+
+                    $resp = array('data' => $this->Api_model->check_nomor_induk($nomor_induk));
+                    json_output($resp['data']['status'], $resp);
+                }
+            }
+        }
+    }
+
+    public function proses_parkir() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                $response2 = $this->Api_model->authAdmin();
+                if($response['status'] == 200 && $response2['status']== 200){
+
+                    $params = json_decode(file_get_contents('php://input'), true);
+                    $nomor_induk = null;
+                    $jenis = null;
+
+                    if(!isset($params['nomor_induk']) || $params['nomor_induk'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nomor_induk tidak ada' ));
+                    } else {
+                        $nomor_induk = $params['nomor_induk'];
+                    }
+
+                    if(!isset($params['jenis']) || $params['jenis'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'jenis tidak ada' ));
+                    } else {
+                        $jenis = $params['jenis'];
+                    }
+
+                    $resp1 = $this->Api_model->check_nomor_induk($nomor_induk);
+                    if($resp1['status'] != 200) {
+                        return json_output(400, $resp1);
+                    }
+                    else {
+                        $newData = array(
+                            'jenis_parkir' => $jenis,
+                            'nomor_induk' => $nomor_induk
+                        );
+
+                        $resp = array('data' => $this->Api_model->proses_parkir($newData));
+                        json_output($resp['data']['status'], $resp);
+                    }
+
+
                 }
             }
         }

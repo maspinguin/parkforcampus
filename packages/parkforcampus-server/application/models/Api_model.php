@@ -31,13 +31,16 @@ class Api_model extends CI_Model {
             ->where('status_id', '1')
             ->get()->row();
         $q2 = null;
-        if($q->id_type == 1) {
-            $q2 = $this->db->select('nama')->from('tbl_mahasiswa')->where('nim',$username)->where('status_id', 1)
-                ->get()->row();
-        } else {
-            $q2 = $this->db->select('nama')->from('tbl_pegawai')->where('nip',$username)->where('status_id', 1)
-                ->get()->row();
+        if($q != "") {
+            if($q->id_type == 1) {
+                $q2 = $this->db->select('nama')->from('tbl_mahasiswa')->where('nim',$username)->where('status_id', 1)
+                    ->get()->row();
+            } else {
+                $q2 = $this->db->select('nama')->from('tbl_pegawai')->where('nip',$username)->where('status_id', 1)
+                    ->get()->row();
+            }
         }
+
 
         if($q == "" || $q2 == null){
           return array('status' => 403,'message' => 'Username inactive/ not found.');
@@ -542,5 +545,79 @@ class Api_model extends CI_Model {
         }
 
         return $data;
+    }
+
+    public function check_nomor_induk($nomor_induk) {
+        $q = $this->db->select('*')->from('tbl_pengguna')->where('nomor_induk', $nomor_induk)->where('status_id', 1)
+            ->get()->row();
+        if($q == "") {
+            return array('status' => 401,'message' => 'kartu tidak terdaftar');
+        } else {
+            if($q->id_type == 1) {
+                $q = $this->db->select('*')->from('tbl_mahasiswa')->where('nim', $nomor_induk)->where('status_id', 1)
+                    ->get()->row();
+            } else {
+                $q = $this->db->select('*')->from('tbl_pegawai')->where('nip', $nomor_induk)->where('status_id', 1)
+                    ->get()->row();
+            }
+
+            if($q == "") {
+                return array('status' => 401,'message' => 'data pengguna tidak terdaftar!');
+            } else {
+                return array('status'=> 200);
+            }
+        }
+    }
+
+    public function proses_parkir($data) {
+        if($data['jenis_parkir'] == "masuk") {
+            $q = $this->db->select('*')->from('tbl_parkir')
+                ->where('nomor_induk', $data['nomor_induk'])
+                ->where('jenis_parkir', 'masuk')
+                ->where('status_id', 1)->get()->row();
+            if($q == "") {
+                try {
+                    $data['waktu'] = date('Y-m-d H:i:s');
+                    $data['status_id'] = 1;
+                    $data['created_at'] = date('Y-m-d H:i:s');
+                    $this->db->insert('tbl_parkir', $data);
+                    return array('status'=>200, 'command'=>'open_portal_masuk', 'message'=>'success proses parkir');
+                } catch(Exception $err) {
+                    return array('status'=> 400, 'message'=> 'error proses parkir!', 'error_ci' => $this->db->_error_message());
+                }
+            } else {
+                return array('status' => 400, 'command'=>'open_portal_masuk','message' => 'user sudah masuk / belum keluar.');
+            }
+        }
+        else if($data['jenis_parkir'] == "keluar") {
+            $q = $this->db->select('*')->from('tbl_parkir')
+                ->where('nomor_induk', $data['nomor_induk'])
+                ->where('jenis_parkir', 'masuk')
+                ->where('status_id', 1)->get()->row();
+
+            if($q == "") {
+                return array('status'=> 400, 'message' => 'user belum masuk!');
+            } else {
+                $data['waktu'] = date('Y-m-d H:i:s');
+                $data['status_id'] = 1;
+                $data['created_at'] = date('Y-m-d H:i:s');
+                $this->db->insert('tbl_parkir', $data);
+
+                $newData = array(
+                    'status_id'=> 2,
+                    'updated_at'=> date('Y-m-d H:i:s')
+                );
+                $this->db
+                    ->where('nomor_induk', $data['nomor_induk'])
+                    ->where('status_id', 1)
+                    ->where('jenis_parkir','masuk')
+                    ->update('tbl_parkir', $newData);
+                return array('status' => 200, 'message'=> 'success keluar.', 'command'=> 'open_portal_keluar');
+            }
+        }
+        else {
+            return array('status' => 400, 'message' => 'jenis tidak terdaftar!');
+        }
+
     }
 }
