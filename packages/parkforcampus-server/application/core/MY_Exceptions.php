@@ -8,7 +8,7 @@ class MY_Exceptions extends CI_Exceptions {
 
         echo json_encode(
             array(
-                'status' => FALSE,
+                'status' => $status_code,
                 'error' => 'Internal Server Error',
                 'message' => $message
             )

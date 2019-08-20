@@ -68,6 +68,21 @@ class Auth extends CI_Controller {
 		}
 	}
 
+//	public function test() {
+//        $method = $_SERVER['REQUEST_METHOD'];
+//        if($method != 'POST'){
+//            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+//        } else {
+//            $check_auth_client = $this->Api_model->check_auth_client();
+//            if($check_auth_client == true){
+//                $response = $this->Api_model->auth();
+//                if($response['status'] == 200){
+//                    json_output($response['status'], $response);
+//                }
+//            }
+//        }
+//	}
+
 
 	public function logout()
 	{

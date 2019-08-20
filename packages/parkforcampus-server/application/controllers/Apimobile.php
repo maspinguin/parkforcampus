@@ -35,11 +35,13 @@ class Apimobile extends CI_Controller {
                 if($response['status'] == 200){
                     // $resp = $this->Api_model->pelanggan_all_data();
                     //$resp = array('data' => $this->Api_model->pelanggan_all_data());
-                    json_output($response['status'], array('message'=>'hello'));
+                    json_output($resp['data']['status'], array('message'=>'hello'));
                 }
 			}
 		}
 	}
+
+
 
 	public function list_pengguna() {
         $method = $_SERVER['REQUEST_METHOD'];
@@ -54,6 +56,7 @@ class Apimobile extends CI_Controller {
 
 					//get from input post
 	//				$params = $_REQUEST;
+                    $search = null;
 					$start = null ;
 					$limit = null ;
 					$orderBy = null;
@@ -69,8 +72,12 @@ class Apimobile extends CI_Controller {
                 	if(isset($params['orderBy'])) {
                 		$orderBy = $params['orderBy'];
 					}
-                    $resp = array('data' => $this->Api_model->list_pengguna($type, $start, $limit, $orderBy));
-                    json_output($response['status'], $resp);
+
+					if(isset($params['search'])) {
+					    $search = $params['search'];
+                    }
+                    $resp = array('data' => $this->Api_model->list_pengguna($type, $start, $limit, $orderBy, $search));
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -92,6 +99,7 @@ class Apimobile extends CI_Controller {
                     $start = null ;
                     $limit = null ;
                     $orderBy = null;
+                    $search = null;
                     if(isset($params['start']) && isset($params['limit'])) {
                         $start = $params['start'];
                         $limit = $params['limit'];
@@ -100,8 +108,11 @@ class Apimobile extends CI_Controller {
                     if(isset($params['orderBy'])) {
                         $orderBy = $params['orderBy'];
                     }
-                    $resp = array('data' => $this->Api_model->list_pegawai($start, $limit, $orderBy));
-                    json_output($response['status'], $resp);
+                    if(isset($params['search'])) {
+                        $search = $params['search'];
+                    }
+                    $resp = array('data' => $this->Api_model->list_pegawai($start, $limit, $orderBy, $search));
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -123,6 +134,7 @@ class Apimobile extends CI_Controller {
                     $start = null ;
                     $limit = null ;
                     $orderBy = null;
+                    $search = null;
                     if(isset($params['start']) && isset($params['limit'])) {
                         $start = $params['start'];
                         $limit = $params['limit'];
@@ -131,8 +143,12 @@ class Apimobile extends CI_Controller {
                     if(isset($params['orderBy'])) {
                         $orderBy = $params['orderBy'];
                     }
-                    $resp = array('data' => $this->Api_model->list_mahasiswa($start, $limit, $orderBy));
-                    json_output($response['status'], $resp);
+
+                    if(isset($params['search'])) {
+                        $search = $params['search'];
+                    }
+                    $resp = array('data' => $this->Api_model->list_mahasiswa($start, $limit, $orderBy, $search));
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -148,7 +164,7 @@ class Apimobile extends CI_Controller {
                 $response = $this->Api_model->auth();
                 if($response['status'] == 200){
                     $resp = array('data' => $this->Api_model->list_type_pengguna());
-                    json_output($response['status'], $resp);
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -202,7 +218,7 @@ class Apimobile extends CI_Controller {
                     );
 
                     $resp = array('data' => $this->Api_model->insert_mahasiswa($newData));
-                    json_output($response['status'], $resp);
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -255,7 +271,7 @@ class Apimobile extends CI_Controller {
                     );
 
                     $resp = array('data' => $this->Api_model->update_mahasiswa($newData));
-                    json_output($response['status'], $resp);
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -286,7 +302,7 @@ class Apimobile extends CI_Controller {
                     );
 
                     $resp = array('data' => $this->Api_model->delete_mahasiswa($newData));
-                    json_output($response['status'], $resp);
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -341,7 +357,7 @@ class Apimobile extends CI_Controller {
                     );
 
                     $resp = array('data' => $this->Api_model->insert_pegawai($newData));
-                    json_output($response['status'], $resp);
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -394,7 +410,7 @@ class Apimobile extends CI_Controller {
                     );
 
                     $resp = array('data' => $this->Api_model->update_pegawai($newData));
-                    json_output($response['status'], $resp);
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
@@ -425,78 +441,145 @@ class Apimobile extends CI_Controller {
                     );
 
                     $resp = array('data' => $this->Api_model->delete_pegawai($newData));
-                    json_output($response['status'], $resp);
+                    json_output($resp['data']['status'], $resp);
                 }
             }
         }
     }
 
+    public function insert_pengguna() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'POST'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                $response2 = $this->Api_model->authAdmin();
+                if($response['status'] == 200 && $response2['status'] == 200){
+                    $params = json_decode(file_get_contents('php://input'), true);
 
-//  public function insert_pemeriksaan()
-//  {
-//    $method = $_SERVER['REQUEST_METHOD'];
-//    if($method != 'POST' ){
-//  	json_output(400,array('status' => 400,'message' => 'Bad request.'));
-//    }
-//    else {
-//  	$check_auth_client = $this->Api_model->check_auth_client();
-//  	if($check_auth_client == true){
-//  	  $response = $this->Api_model->auth();
-//  	  $respStatus = $response['status'];
-//  	  if($response['status'] == 200){
-//  		//$params = json_decode(file_get_contents('php://input'), TRUE);
-//		$params = $_REQUEST;
-//  		if(!isset($params['id_pemakaian'])||$params['id_pemakaian'] == ''){
-//			return json_output(203,array('status' =>203 , 'message'=> 'id_pemakaian tidak ada' ));
-//		}
-//
-//		if(!isset($params['tanggal'])||$params['tanggal'] == ''){
-//			return json_output(203,array('status' =>203 , 'message'=> 'tanggal tidak ada' ));
-//		}
-//
-//		// if($params['id_material'] == ''){
-//		// 	return json_output(203,array('status' =>203 , 'message'=> 'id_material tidak ada' ));
-//		// }
-//
-//		if(!isset($params['lattitude'])||$params['lattitude'] == ''){
-//			return json_output(203,array('status' =>203 , 'message'=> 'latittude tidak ada' ));
-//		}
-//
-//		if(!isset($params['longitude'])||$params['longitude'] == ''){
-//			return json_output(203,array('status' =>203 , 'message'=> 'longitude tidak ada' ));
-//		}
-//
-//		if(!isset($params['alasan'])||$params['alasan'] == ''){
-//			return json_output(203,array('status' =>203 , 'message'=> 'alasan tidak ada' ));
-//		}
-//
-//		if(!isset($params['stand'])||$params['stand'] == ''){
-//			return json_output(203,array('status' =>203 , 'message'=> 'Stand tidak ada' ));
-//		}
-//
-//		if(!isset($params['petugas'])||$params['petugas'] == ''){
-//			return json_output(203,array('status' =>203 , 'message'=> 'petugas tidak ada' ));
-//		}
-//		if(!isset($_FILES['foto'])) {
-//			return json_output(203,array('status' =>203 , 'message'=> 'foto tidak ada' ));
-//		}
-//
-//		$params['statusid'] = '0';
-//  		// if ($params['nama_pel'] == "" || $params['nama_penghuni'] == ""|| $params['alamat'] == "" || $params['tarif'] == "") {
-//  		//   $respStatus = 400;
-//  		//   $resp = array('status' => 400,'message' =>  'Error, some field cant be empty');
-//  		// } else {
-//  		//   $resp = $this->MyModel->pelanggan_update_data($id,$params);
-//  		// }
-//  		// json_output($respStatus,$resp);
-//		$resp = $this->Api_model->pemeriksaan_create_data($params);
-//  		json_output($respStatus,$resp);
-//  	  }
-//  	}
-//    }
-//  }
+                    $nomor_induk = null ;
+                    $tipe = null ;
+                    $password = null;
 
-//  }
+                    if(!isset($params['nomor_induk']) || $params['nomor_induk'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nomor_induk tidak ada' ));
+                    } else {
+                        $nomor_induk = $params['nomor_induk'];
+                    }
+
+                    if(!isset($params['tipe']) || $params['tipe'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'tipe tidak ada' ));
+                    } else {
+                        $tipe = $params['tipe'];
+                    }
+
+                    if(!isset($params['password']) || $params['password'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'password tidak ada' ));
+                    } else {
+                        $password = $params['password'];
+                    }
+
+
+                    $newData = array(
+                        'nomor_induk' => $nomor_induk,
+                        'password' => $password,
+                        'tipe' => $tipe
+                    );
+
+                    $resp = array('data' => $this->Api_model->insert_pengguna($newData));
+                    json_output($resp['data']['status'], $resp);
+                }
+            }
+        }
+    }
+
+    public function update_pengguna() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'PUT'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                $response2 = $this->Api_model->authAdmin();
+                if($response['status'] == 200 && $response2['status'] == 200){
+                    $params = json_decode(file_get_contents('php://input'), true);
+
+                    $nomor_induk = null ;
+                    $tipe = null ;
+                    $password = null;
+
+                    if(!isset($params['nomor_induk']) || $params['nomor_induk'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nomor_induk tidak ada' ));
+                    } else {
+                        $nomor_induk = $params['nomor_induk'];
+                    }
+
+                    if(!isset($params['tipe']) || $params['tipe'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'tipe tidak ada' ));
+                    } else {
+                        $tipe = $params['tipe'];
+                    }
+
+                    if(!isset($params['password']) || $params['password'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'password tidak ada' ));
+                    } else {
+                        $password = $params['password'];
+                    }
+
+
+                    $newData = array(
+                        'nomor_induk' => $nomor_induk,
+                        'password' => $password,
+                        'tipe' => $tipe
+                    );
+
+                    $resp = array('data' => $this->Api_model->update_pengguna($newData));
+                    json_output($resp['data']['status'], $resp);
+                }
+            }
+        }
+    }
+
+    public function delete_pengguna() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method != 'DELETE'){
+            json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        } else {
+            $check_auth_client = $this->Api_model->check_auth_client();
+            if($check_auth_client == true){
+                $response = $this->Api_model->auth();
+                $response2 = $this->Api_model->authAdmin();
+                if($response['status'] == 200 && $response2['status'] == 200){
+                    $params = json_decode(file_get_contents('php://input'), true);
+
+                    $nomor_induk = null ;
+
+                    if(!isset($params['nomor_induk']) || $params['nomor_induk'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'nomor_induk tidak ada' ));
+                    } else {
+                        $nomor_induk = $params['nomor_induk'];
+                    }
+
+                    if(!isset($params['tipe']) || $params['tipe'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'tipe tidak ada' ));
+                    } else {
+                        $tipe = $params['tipe'];
+                    }
+
+                    $newData = array(
+                        'nomor_induk' => $nomor_induk,
+                        'tipe' => $tipe
+                    );
+
+                    $resp = array('data' => $this->Api_model->delete_pengguna($newData));
+                    json_output($resp['data']['status'], $resp);
+                }
+            }
+        }
+    }
 
 }
 ?>
