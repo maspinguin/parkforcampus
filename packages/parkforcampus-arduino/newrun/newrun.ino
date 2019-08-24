@@ -26,6 +26,7 @@ void setup() {
 
 String input;
 String inputVars;
+bool portalMode;
 
 String command = "";
 String var1="", var2="", var3="", var4="";
@@ -78,9 +79,34 @@ void loop() {
       doWriteKey(var1, var2, var3, var4);
     }
 
-    if(command == "modePortal" && var1 != "") {
+    if(command == "startModePortal") {
+      if(!portalMode) {
+        portalMode = true;
+        command = "";
+        var1 = "";
+        var2 = "";
+        var3 = "";
+        var4 = "";
+      }
     }
-  }
+
+    
+
+
+    if(command == "stopModePortal") {
+      portalMode = false;
+      command = "";
+      var1 = "";
+      var2 = "";
+      var3 = "";
+      var4 = "";
+    }
+     
+    if(portalMode) {
+        Serial.println("Portal Mode");  
+        delay(1000);
+     }
+}
 
 
 void doWrite(String _keyA, String _keyB, String value) {
