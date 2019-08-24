@@ -152,11 +152,16 @@ class Api_model extends CI_Model {
     public function authAdmin() {
         $token     = $this->input->get_request_header('Authorization', TRUE);
         $data = AUTHORIZATION::decode($token);
-        if($data->id_type != 3 && $data->id_type != 4) {
-            return json_output(401, array('status' => 401, 'message' => 'user_type is unauthorized.' ));
+        if(isset($data) && $data != "" ) {
+            if($data->id_type != 3 && $data->id_type != 4) {
+                return json_output(401, array('status' => 401, 'message' => 'user_type is unauthorized.' ));
+            } else {
+                return array('status' => 200, 'message' => 'user_type is authorized.' );
+            }
         } else {
-            return array('status' => 200, 'message' => 'user_type is authorized.' );
+            return json_output(400, array('status' => 400, 'message' => 'invalid token!'));
         }
+
     }
 
     public function list_pengguna($type = null,$start=null, $limit=null, $order='asc', $search = null) {
