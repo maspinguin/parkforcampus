@@ -85,8 +85,9 @@ class Api_model extends CI_Model {
       }
 
       $q  = $this->db->select('nomor_induk,expired_at')->from('tbl_users_authentication')->where('token',$token)->where('status_id', '1')->get()->row();
+
       if($q == ""){
-        return array('status' => 204,'message' => 'Token not found.');
+        return array('status' => 400,'valid'=> false,'message' => 'Token not found.');
       } else {
         if($q->expired_at < date('Y-m-d H:i:s')){
             return array('status' => 200, 'valid'=> false,'message' => 'Your session has been expired.');
@@ -169,6 +170,10 @@ class Api_model extends CI_Model {
             SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`, `p`.`id_type`
             FROM `tbl_pengguna` as `p`, `tbl_mahasiswa` as `m`
             WHERE `m`.`nim` = `p`.`nomor_induk` AND `p`.`status_id` = 1";
+        $querylimit = "
+            SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`, `p`.`id_type`
+            FROM `tbl_pengguna` as `p`, `tbl_mahasiswa` as `m`
+            WHERE `m`.`nim` = `p`.`nomor_induk` AND `p`.`status_id` = 1";
 
         if(isset($type)) {
             $typeres = $this->db->select('keterangan, id')->from('tbl_type_pengguna')
@@ -178,14 +183,22 @@ class Api_model extends CI_Model {
 
             if($typeres != "") {
                 $query.= " AND p.id_type = ".$typeres->id;
+                $querylimit.= " AND p.id_type = ".$typeres->id;
             }
         }
 
         if(isset($search)) {
             $query.= " AND (`m`.`nim` LIKE '%".$search."%' "." OR `m`.`nama` LIKE '%".$search."%' ) ";
+            $querylimit.= " AND (`m`.`nim` LIKE '%".$search."%' "." OR `m`.`nama` LIKE '%".$search."%' ) ";
         }
 
         $query.="
+            UNION
+            SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`, `p`.`id_type`
+            FROM `tbl_pengguna` as `p`, `tbl_pegawai` as `m`
+            WHERE `m`.`nip` = `p`.`nomor_induk`
+            AND `p`.`status_id` = 1";
+        $querylimit.="
             UNION
             SELECT `p`.`id`,`p`.`nomor_induk`, `m`.`nama`, `m`.`alamat`, `p`.`no_kartu`, `p`.`id_type`
             FROM `tbl_pengguna` as `p`, `tbl_pegawai` as `m`
@@ -200,12 +213,14 @@ class Api_model extends CI_Model {
 
             if($typeres != "") {
                 $query.= " AND p.id_type = ".$typeres->id;
+                $querylimit.= " AND p.id_type = ".$typeres->id;
             }
 
         }
 
         if(isset($search)) {
             $query.= " AND (`m`.`nip` LIKE '%".$search."%' "." OR `m`.`nama` LIKE '%".$search."%' ) ";
+            $querylimit.= " AND (`m`.`nip` LIKE '%".$search."%' "." OR `m`.`nama` LIKE '%".$search."%' ) ";
         }
 
         if(isset($order)) {
@@ -218,13 +233,19 @@ class Api_model extends CI_Model {
 
         try {
             $data = $this->db->query($query)->result();
-            return array('status' => 200, 'data' => $data);
+            $total =  $this->db->query($querylimit)->num_rows();
+            return array('status' => 200, 'total'=> $total, 'data' => $data);
         } catch(Exception $err) {
             return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
         }
     }
 
     public function list_pegawai($start=null, $limit=null, $order='asc', $search = null) {
+        $totalquery = "select count(*) as count from tbl_pegawai where status_id = 1";
+        if(isset($search)) {
+            $totalquery.= " AND (nip LIKE '%".$search."%' OR nama LIKE '%".$search."%')";
+        }
+
         $query = "
             SELECT *
             FROM `tbl_pegawai`
@@ -243,13 +264,20 @@ class Api_model extends CI_Model {
 
         try {
             $data = $this->db->query($query)->result();
-            return array('status' => 200, 'data' => $data);
+            $total = $this->db->query($totalquery)->result();
+
+            return array('status' => 200, 'total' =>$total[0]->count, 'data' => $data);
         } catch(Exception $err) {
             return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
         }
     }
 
     public function list_mahasiswa($start=null, $limit=null, $order='asc', $search = null) {
+        $totalquery = "select count(*) as count from tbl_mahasiswa where status_id = 1";
+        if(isset($search)) {
+            $totalquery.= " AND (nip LIKE '%".$search."%' OR nama LIKE '%".$search."%')";
+        }
+
         $query = "
             SELECT *
             FROM `tbl_mahasiswa`
@@ -268,7 +296,9 @@ class Api_model extends CI_Model {
 
         try {
             $data = $this->db->query($query)->result();
-            return array('status' => 200, 'data' => $data);
+            $total = $this->db->query($totalquery)->result();
+
+            return array('status' => 200, 'total' =>$total[0]->count, 'data' => $data);
         } catch(Exception $err) {
             return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
         }

@@ -14,11 +14,10 @@ namespace ParkirClientWindows
         [STAThread]
         static void Main()
         {
-
-            AppOpenHandler.CheckToken();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Configuration.getConfig();
+            AppOpenHandler.CheckToken();
         }
     }
 }

@@ -9,7 +9,11 @@ namespace ParkirClientWindows.Model
     class ResponseModel
     {
         public int status { get; set; }
+        public int total { get; set; }
         public bool valid { get; set; }
         public string message { get; set; }
+        public string token { get; set; }
+       
     }
+ 
 }
