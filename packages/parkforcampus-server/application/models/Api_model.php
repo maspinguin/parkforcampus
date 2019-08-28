@@ -275,7 +275,7 @@ class Api_model extends CI_Model {
     public function list_mahasiswa($start=null, $limit=null, $order='asc', $search = null) {
         $totalquery = "select count(*) as count from tbl_mahasiswa where status_id = 1";
         if(isset($search)) {
-            $totalquery.= " AND (nip LIKE '%".$search."%' OR nama LIKE '%".$search."%')";
+            $totalquery.= " AND (nim LIKE '%".$search."%' OR nama LIKE '%".$search."%')";
         }
 
         $query = "

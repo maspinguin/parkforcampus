@@ -67,9 +67,12 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\ResponseBy.cs" />
-    <Compile Include="Model\ResponsePegawai.cs" />
-    <Compile Include="Model\ResponsePegawaiList.cs" />
-    <Compile Include="Model\ResponsePegawaiDetail.cs" />
+    <Compile Include="Model\Mahasiswa\ResponseMahasiswa.cs" />
+    <Compile Include="Model\Pegawai\ResponsePegawai.cs" />
+    <Compile Include="Model\Mahasiswa\ResponseMahasiswaDetail.cs" />
+    <Compile Include="Model\Mahasiswa\ResponseMahasiswaList.cs" />
+    <Compile Include="Model\Pegawai\ResponsePegawaiList.cs" />
+    <Compile Include="Model\Pegawai\ResponsePegawaiDetail.cs" />
     <Compile Include="Model\ResponseModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -104,6 +107,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\Parkir\" />
+    <Folder Include="Model\Pengguna\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
