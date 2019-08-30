@@ -384,6 +384,16 @@ namespace ParkirClientWindows
             ArduinoHandler.OpenPort2(textBoxArduino2);
         }
 
+        private void pingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.write(Configuration.SERIALPORT1, "ping", textBoxArduino1);
+        }
+
+        private void pingToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.write(Configuration.SERIALPORT2, "ping", textBoxArduino2);
+        }
+
         private void buttonPengguna_search_Click(object sender, EventArgs e)
         {
             penggunaTotal = 0;

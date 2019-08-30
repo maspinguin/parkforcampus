@@ -71,6 +71,11 @@ void loop() {
           
     }
 
+    if(command == "ping") {
+      Serial.println("PONG!");
+      command = "";
+    }
+
     if(command == "writeCard" && var1 != ""&& var2 != ""&& var3 != "") {
        doWrite(var1, var2, var3);
     }

@@ -120,6 +120,8 @@
             this.connectReconnectToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -1076,7 +1078,8 @@
             // 
             this.port1ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.connectReconnectToolStripMenuItem1,
-            this.settingToolStripMenuItem1});
+            this.settingToolStripMenuItem1,
+            this.pingToolStripMenuItem});
             this.port1ToolStripMenuItem.Name = "port1ToolStripMenuItem";
             this.port1ToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             this.port1ToolStripMenuItem.Text = "Port 1";
@@ -1085,7 +1088,8 @@
             // 
             this.port2ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.connectReconnectToolStripMenuItem,
-            this.settingToolStripMenuItem2});
+            this.settingToolStripMenuItem2,
+            this.pingToolStripMenuItem1});
             this.port2ToolStripMenuItem.Name = "port2ToolStripMenuItem";
             this.port2ToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             this.port2ToolStripMenuItem.Text = "Port 2";
@@ -1115,6 +1119,20 @@
             this.settingToolStripMenuItem2.Name = "settingToolStripMenuItem2";
             this.settingToolStripMenuItem2.Size = new System.Drawing.Size(221, 26);
             this.settingToolStripMenuItem2.Text = "Setting";
+            // 
+            // pingToolStripMenuItem
+            // 
+            this.pingToolStripMenuItem.Name = "pingToolStripMenuItem";
+            this.pingToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
+            this.pingToolStripMenuItem.Text = "Ping";
+            this.pingToolStripMenuItem.Click += new System.EventHandler(this.pingToolStripMenuItem_Click);
+            // 
+            // pingToolStripMenuItem1
+            // 
+            this.pingToolStripMenuItem1.Name = "pingToolStripMenuItem1";
+            this.pingToolStripMenuItem1.Size = new System.Drawing.Size(221, 26);
+            this.pingToolStripMenuItem1.Text = "Ping";
+            this.pingToolStripMenuItem1.Click += new System.EventHandler(this.pingToolStripMenuItem1_Click);
             // 
             // MainForm
             // 
@@ -1260,5 +1278,7 @@
         private System.Windows.Forms.ToolStripMenuItem connectReconnectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem pingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pingToolStripMenuItem1;
     }
 }

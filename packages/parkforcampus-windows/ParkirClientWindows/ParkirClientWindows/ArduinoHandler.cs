@@ -12,7 +12,7 @@ namespace ParkirClientWindows
     {
         public static void OpenPort1(TextBox textbox)
         {
-            if (!SERIALPORT2.IsOpen)
+            if (!SERIALPORT1.IsOpen)
             {
                 try
                 {
@@ -59,8 +59,29 @@ namespace ParkirClientWindows
             }
         }
 
+        public static void write(SerialPort serialPort,string cmd, TextBox textbox, bool newLine = false)
+        {
+            try
+            {
+                if(newLine)
+                {
+                    serialPort.WriteLine(cmd);
+                }
+                else
+                {
+                    serialPort.Write(cmd);
+                }
+                
+            }catch(Exception err)
+            {
+                renderTextLog(textbox, err.Message);
+            }
+        }
+
         public static void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
+            string s = SERIALPORT1.ReadExisting();
+            MessageBox.Show(s);
 
         }
 
