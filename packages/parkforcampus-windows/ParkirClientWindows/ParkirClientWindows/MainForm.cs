@@ -43,12 +43,12 @@ namespace ParkirClientWindows
             labelServerAddress.Text = Configuration.ENDPOINT;
             comboBoxPengguna_filter.SelectedIndex = 0;
             comboBoxParkir_filter.SelectedIndex = 0;
+            labelNama.Text = "Selamat datang " + Configuration.LOGINNAMA + " ( NIP / ID: " + Configuration.LOGINNIP + ")";
 
             Configuration.setSerialPortSetting();
             labelArduino1.Text = "PORT: " + Configuration.SERIALPORT1_NAME + " BAUDRATE: " + Configuration.SERIALPORT1_BAUDRATE;
             labelArduino2.Text = "PORT: " + Configuration.SERIALPORT2_NAME + " BAUDRATE: " + Configuration.SERIALPORT2_BAUDRATE;
             ArduinoHandler.OpenPort1(textBoxArduino1);
-
             ArduinoHandler.OpenPort2(textBoxArduino2);
         }
 

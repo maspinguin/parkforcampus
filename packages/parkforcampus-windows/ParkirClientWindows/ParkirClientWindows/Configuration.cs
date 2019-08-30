@@ -18,6 +18,7 @@ namespace ParkirClientWindows
         public static string SERIALPORT1_NAME, SERIALPORT2_NAME;
         public static int SERIALPORT1_BAUDRATE, SERIALPORT2_BAUDRATE;
         public static SerialPort SERIALPORT1, SERIALPORT2;
+        public static string LOGINNAMA, LOGINNIP;
        
         public static void getConfig()
         {

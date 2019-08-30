@@ -35,6 +35,8 @@ namespace ParkirClientWindows
 
                         if (isTokenValid)
                         {
+                            Configuration.LOGINNAMA = response2.Data.nama;
+                            Configuration.LOGINNIP = response2.Data.nomor_induk;
                             Application.Run(new MainForm());
                         }
                         else

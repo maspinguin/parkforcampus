@@ -58,6 +58,7 @@ class Api_model extends CI_Model {
                $tokenData = new StdClass();
                $tokenData->nomor_induk = $username;
                $tokenData->id_type = $q->id_type;
+               $tokenData->nama= $q2->nama;
                $tokenData->last_login = $last_login;
                $tokenData->expired_at = $expired_at;
                $newtoken = AUTHORIZATION::generateToken($tokenData);
@@ -69,7 +70,7 @@ class Api_model extends CI_Model {
                   return array('status' => 500,'message' => 'Internal server error.');
                } else {
                   $this->db->trans_commit();
-                  return array('status' => 200,'message' => 'Successfully login.','nomor_induk' => $id, 'token' => $newtoken);
+                  return array('status' => 200,'message' => 'Successfully login.','nomor_induk' => $id,'nama'=> $q2->nama, 'token' => $newtoken);
                }
             } else {
                return array('status' => 403,'message' => 'Wrong password.');
@@ -92,7 +93,8 @@ class Api_model extends CI_Model {
         if($q->expired_at < date('Y-m-d H:i:s')){
             return array('status' => 200, 'valid'=> false,'message' => 'Your session has been expired.');
         }else{
-          return array('status' => 200, 'valid'=> true,'message' => 'Token valid.');
+          $data = AUTHORIZATION::decode($token);
+          return array('status' => 200, 'nama' => $data->nama, 'nomor_induk'=> $data->nomor_induk, 'valid'=> true,'message' => 'Token valid.');
         }
       }
     }

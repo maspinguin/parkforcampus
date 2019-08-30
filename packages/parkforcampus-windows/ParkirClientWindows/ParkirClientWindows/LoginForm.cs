@@ -39,6 +39,8 @@ namespace ParkirClientWindows
                 {
                     Configuration.configClass.SaveLinebyWord("ENDPOINT", "token", response2.Data.token);
                     Configuration.TOKEN = response2.Data.token;
+                    Configuration.LOGINNAMA = response2.Data.nama;
+                    Configuration.LOGINNIP = response2.Data.nomor_induk;
                     this.Hide();
                     MainForm a = new MainForm();
                     a.ShowDialog();

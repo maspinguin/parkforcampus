@@ -13,7 +13,9 @@ namespace ParkirClientWindows.Model
         public bool valid { get; set; }
         public string message { get; set; }
         public string token { get; set; }
-       
+        public string nama { get; set; }
+        public string nomor_induk { get; set; }
+
     }
  
 }
