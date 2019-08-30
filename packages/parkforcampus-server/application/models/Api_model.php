@@ -546,16 +546,16 @@ class Api_model extends CI_Model {
         $token     = $this->input->get_request_header('Authorization', TRUE);
         $decode = AUTHORIZATION::decode($token);
         if($type == "create") {
-            $data['created_at'] = date('Y-m-d h:m:s');
+            $data['created_at'] = date('Y-m-d H:m:s');
             $data['created_by'] = $decode->nomor_induk;
         }
         if($type == "update") {
-            $data['updated_at'] = date('Y-m-d h:m:s');
+            $data['updated_at'] = date('Y-m-d H:m:s');
             $data['updated_by'] = $decode->nomor_induk;
         }
 
         if($type == "delete") {
-            $data['deleted_at'] = date('Y-m-d h:m:s');
+            $data['deleted_at'] = date('Y-m-d H:m:s');
             $data['deleted_by'] = $decode->nomor_induk;
         }
 
@@ -605,6 +605,7 @@ class Api_model extends CI_Model {
     }
 
     public function proses_parkir($data) {
+      // $dt = new DateTime();
         if($data['jenis_parkir'] == "masuk") {
             $q = $this->db->select('*')->from('tbl_parkir')
                 ->where('nomor_induk', $data['nomor_induk'])
@@ -655,5 +656,55 @@ class Api_model extends CI_Model {
             return array('status' => 400, 'message' => 'jenis tidak terdaftar!');
         }
 
+    }
+
+    public function list_parkir($jenis= null,$start=null, $limit=null, $order='asc', $search = null, $date_start = null, $date_end = null) {
+
+        $totalquery = "select count(*) as count from tbl_parkir where status_id != 0";
+        if(isset($search)) {
+            $totalquery.= " AND (nomor_induk LIKE '%".$search."%')";
+        }
+
+        if(isset($jenis)){
+          $totalquery.= " AND jenis_parkir = '".$jenis."'";
+        }
+
+        if(isset($date_start)&& isset($date_end)){
+            $totalquery.= " AND waktu >= '$date_start' AND waktu <= '$date_end + 23:59:59'  ";
+        }
+
+
+        $query = "
+            SELECT *
+            FROM `tbl_parkir`
+            WHERE `status_id` != 0";
+
+        if(isset($search)) {
+            $query.= " AND (nomor_induk LIKE '%".$search."%')";
+        }
+
+        if(isset($jenis)){
+          $query.= " AND jenis_parkir = '".$jenis."'";
+        }
+
+        if(isset($date_start)&& isset($date_end)){
+            $query.= " AND waktu >= '$date_start' AND waktu <= '$date_end  + 23:59:59' ";
+        }
+
+        if(isset($order)) {
+            $query.= " ORDER BY waktu ".$order;
+        }
+        if(isset($start) && isset($limit)) {
+            $query.= " LIMIT ".$limit." OFFSET ".$start;
+        }
+
+        try {
+            $data = $this->db->query($query)->result();
+            $total = $this->db->query($totalquery)->result();
+
+            return array('status' => 200, 'total' =>$total[0]->count, 'data' => $data);
+        } catch(Exception $err) {
+            return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
+        }
     }
 }

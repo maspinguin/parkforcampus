@@ -655,5 +655,54 @@ class Apimobile extends CI_Controller {
         }
     }
 
+		public function list_parkir() {
+			$method = $_SERVER['REQUEST_METHOD'];
+			if($method != 'POST'){
+					json_output(400,array('status' => 400,'message' => 'Bad request.'));
+			} else {
+					$check_auth_client = $this->Api_model->check_auth_client();
+					if($check_auth_client == true){
+							$response = $this->Api_model->auth();
+							if($response['status'] == 200){
+									$params = json_decode(file_get_contents('php://input'), true);
+
+									//get from input post
+									//				$params = $_REQUEST;
+									$start = null ;
+									$limit = null ;
+									$orderBy = null;
+									$search = null;
+									$jenis = null;
+									$date_start = null;
+									$date_end = null;
+									if(isset($params['start']) && isset($params['limit'])) {
+											$start = $params['start'];
+											$limit = $params['limit'];
+									}
+
+									if(isset($params['orderBy'])) {
+											$orderBy = $params['orderBy'];
+									}
+
+									if(isset($params['search'])) {
+											$search = $params['search'];
+									}
+
+									if(isset($params['jenis'])&& $params['jenis']!="")  {
+											$jenis = $params['jenis'];
+									}
+
+									if(isset($params['dateStart']) && isset($params['dateEnd'])) {
+										$date_start = $params['dateStart'];
+										$date_end = $params['dateEnd'];
+									}
+
+									$resp = array('data' => $this->Api_model->list_parkir($jenis, $start, $limit, $orderBy, $search, $date_start, $date_end));
+									json_output($resp['data']['status'], $resp);
+							}
+					}
+			}
+		}
+
 }
 ?>
