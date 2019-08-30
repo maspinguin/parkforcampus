@@ -36,9 +36,24 @@ namespace ParkirClientWindows
             CLIENT = new RestClient(ENDPOINT);
         }
 
-        public static RestRequest getHttpConfig(string path = "", bool checkToken = false)
+        public static RestRequest getHttpConfig(string path = "", bool checkToken = false, string tipe = "POST")
         {
             var request = new RestRequest(path, Method.POST);
+            if (tipe == "GET")
+            {
+                request = new RestRequest(path, Method.GET);
+            }
+
+            if (tipe == "PUT")
+            {
+                request = new RestRequest(path, Method.PUT);
+            }
+
+            if (tipe == "DELETE")
+            {
+                request = new RestRequest(path, Method.DELETE);
+            }
+
 
             request.RequestFormat = DataFormat.Json;
 

@@ -347,6 +347,11 @@ namespace ParkirClientWindows
             this.getListParkir();
         }
 
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void buttonPengguna_search_Click(object sender, EventArgs e)
         {
             penggunaTotal = 0;
