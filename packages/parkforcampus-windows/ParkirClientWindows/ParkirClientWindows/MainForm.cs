@@ -47,9 +47,9 @@ namespace ParkirClientWindows
             Configuration.setSerialPortSetting();
             labelArduino1.Text = "PORT: " + Configuration.SERIALPORT1_NAME + " BAUDRATE: " + Configuration.SERIALPORT1_BAUDRATE;
             labelArduino2.Text = "PORT: " + Configuration.SERIALPORT2_NAME + " BAUDRATE: " + Configuration.SERIALPORT2_BAUDRATE;
-            Configuration.OpenPort1(textBoxArduino1);
+            ArduinoHandler.OpenPort1(textBoxArduino1);
 
-            Configuration.OpenPort2(textBoxArduino2);
+            ArduinoHandler.OpenPort2(textBoxArduino2);
         }
 
         public void getListPegawai()
@@ -349,7 +349,39 @@ namespace ParkirClientWindows
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string path = "Auth/logout";
+            RestRequest request = Configuration.getHttpConfig(path);
+            
+           
+            IRestResponse<Model.ResponseModel> response2 = Configuration.CLIENT.Execute<Model.ResponseModel>(request);
+            if (response2 != null)
+            {
+                
+                if (response2.Data.status != 200)
+                {
+                    MessageBox.Show(response2.Data.message, "Error Status " + response2.Data.status);
+                }
 
+                Configuration.configClass.SaveLinebyWord("ENDPOINT", "token", "null");
+                Application.Exit();
+                
+            }
+            else
+            {
+                MessageBox.Show("Network/ Server Error!");
+                Configuration.configClass.SaveLinebyWord("ENDPOINT", "token", "null");
+                Application.Exit();
+            }
+        }
+
+        private void connectReconnectToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.OpenPort1(textBoxArduino1);
+        }
+
+        private void connectReconnectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.OpenPort2(textBoxArduino2);
         }
 
         private void buttonPengguna_search_Click(object sender, EventArgs e)

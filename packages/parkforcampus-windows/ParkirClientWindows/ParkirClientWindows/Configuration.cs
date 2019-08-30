@@ -80,53 +80,9 @@ namespace ParkirClientWindows
             SERIALPORT2.PortName = SERIALPORT2_NAME;
         }
 
-        public static void OpenPort1(TextBox textbox)
-        {
-            if (!SERIALPORT2.IsOpen)
-            {
-                try
-                {
-                    SERIALPORT1.Open();
-                    renderTextLog(textbox, "Serial Port 1 Open");
-                }
-                catch (Exception err)
-                {
-                    renderTextLog(textbox, err.Message.ToString());
+       
 
-
-                }
-            }
-            else
-            {
-                renderTextLog(textbox, "PORT 1 ALREADY OPEN");
-
-            }
-        }
-
-        public static void OpenPort2(TextBox textbox)
-        {
-            if (!SERIALPORT2.IsOpen)
-            {
-                try
-                {
-                    SERIALPORT2.Open();
-                    renderTextLog(textbox, "Serial Port 2 Open");
-                }
-                catch (Exception err)
-                {
-                    renderTextLog(textbox, err.Message.ToString());
-                   
-
-                }
-            }
-            else
-            {
-                renderTextLog(textbox, "PORT 1 ALREADY OPEN");
-               
-            }
-        }
-
-        private static void renderTextLog(TextBox textbox, string newMessage)
+        public static void renderTextLog(TextBox textbox, string newMessage)
         {
             textbox.Text +=  Environment.NewLine + DateTime.Now + " : " + newMessage;
             textbox.SelectionStart = textbox.Text.Length;

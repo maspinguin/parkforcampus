@@ -114,6 +114,12 @@
             this.label19 = new System.Windows.Forms.Label();
             this.textBoxArduino1 = new System.Windows.Forms.TextBox();
             this.textBoxArduino2 = new System.Windows.Forms.TextBox();
+            this.port1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.port2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.connectReconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.connectReconnectToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -145,7 +151,9 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.port1ToolStripMenuItem,
+            this.port2ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1331, 28);
@@ -188,7 +196,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 79F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1331, 533);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1331, 577);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -201,7 +209,7 @@
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 422);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 466);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -308,7 +316,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1325, 413);
+            this.tabControl1.Size = new System.Drawing.Size(1325, 457);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -317,7 +325,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1317, 384);
+            this.tabPage1.Size = new System.Drawing.Size(1317, 428);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Data Parkir";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -815,7 +823,7 @@
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(1311, 378);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1311, 422);
             this.tableLayoutPanel6.TabIndex = 3;
             // 
             // flowLayoutPanel7
@@ -955,7 +963,7 @@
             this.dataGridViewParkir.Name = "dataGridViewParkir";
             this.dataGridViewParkir.ReadOnly = true;
             this.dataGridViewParkir.RowTemplate.Height = 24;
-            this.dataGridViewParkir.Size = new System.Drawing.Size(1305, 275);
+            this.dataGridViewParkir.Size = new System.Drawing.Size(1305, 319);
             this.dataGridViewParkir.TabIndex = 1;
             // 
             // label15
@@ -1005,7 +1013,7 @@
             this.flowLayoutPanel8.Controls.Add(this.buttonParkir_previous);
             this.flowLayoutPanel8.Controls.Add(this.buttonParkir_next);
             this.flowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(3, 334);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(3, 378);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
             this.flowLayoutPanel8.Size = new System.Drawing.Size(1305, 41);
             this.flowLayoutPanel8.TabIndex = 2;
@@ -1021,7 +1029,7 @@
             this.flowLayoutPanel9.Controls.Add(this.label19);
             this.flowLayoutPanel9.Controls.Add(this.textBoxArduino2);
             this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 457);
+            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 501);
             this.flowLayoutPanel9.Name = "flowLayoutPanel9";
             this.flowLayoutPanel9.Size = new System.Drawing.Size(1325, 73);
             this.flowLayoutPanel9.TabIndex = 2;
@@ -1064,11 +1072,55 @@
             this.textBoxArduino2.Size = new System.Drawing.Size(561, 61);
             this.textBoxArduino2.TabIndex = 7;
             // 
+            // port1ToolStripMenuItem
+            // 
+            this.port1ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.connectReconnectToolStripMenuItem1,
+            this.settingToolStripMenuItem1});
+            this.port1ToolStripMenuItem.Name = "port1ToolStripMenuItem";
+            this.port1ToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
+            this.port1ToolStripMenuItem.Text = "Port 1";
+            // 
+            // port2ToolStripMenuItem
+            // 
+            this.port2ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.connectReconnectToolStripMenuItem,
+            this.settingToolStripMenuItem2});
+            this.port2ToolStripMenuItem.Name = "port2ToolStripMenuItem";
+            this.port2ToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
+            this.port2ToolStripMenuItem.Text = "Port 2";
+            // 
+            // connectReconnectToolStripMenuItem
+            // 
+            this.connectReconnectToolStripMenuItem.Name = "connectReconnectToolStripMenuItem";
+            this.connectReconnectToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
+            this.connectReconnectToolStripMenuItem.Text = "Connect / Reconnect";
+            this.connectReconnectToolStripMenuItem.Click += new System.EventHandler(this.connectReconnectToolStripMenuItem_Click);
+            // 
+            // connectReconnectToolStripMenuItem1
+            // 
+            this.connectReconnectToolStripMenuItem1.Name = "connectReconnectToolStripMenuItem1";
+            this.connectReconnectToolStripMenuItem1.Size = new System.Drawing.Size(221, 26);
+            this.connectReconnectToolStripMenuItem1.Text = "Connect / Reconnect";
+            this.connectReconnectToolStripMenuItem1.Click += new System.EventHandler(this.connectReconnectToolStripMenuItem1_Click);
+            // 
+            // settingToolStripMenuItem1
+            // 
+            this.settingToolStripMenuItem1.Name = "settingToolStripMenuItem1";
+            this.settingToolStripMenuItem1.Size = new System.Drawing.Size(221, 26);
+            this.settingToolStripMenuItem1.Text = "Setting";
+            // 
+            // settingToolStripMenuItem2
+            // 
+            this.settingToolStripMenuItem2.Name = "settingToolStripMenuItem2";
+            this.settingToolStripMenuItem2.Size = new System.Drawing.Size(221, 26);
+            this.settingToolStripMenuItem2.Text = "Setting";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1331, 561);
+            this.ClientSize = new System.Drawing.Size(1331, 605);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -1202,5 +1254,11 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox textBoxArduino1;
         private System.Windows.Forms.TextBox textBoxArduino2;
+        private System.Windows.Forms.ToolStripMenuItem port1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem connectReconnectToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem port2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem connectReconnectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem2;
     }
 }
