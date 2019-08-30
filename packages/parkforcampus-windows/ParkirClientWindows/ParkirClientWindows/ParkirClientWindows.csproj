@@ -66,6 +66,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\Parkir\ResponseParkir.cs" />
+    <Compile Include="Model\Parkir\ResponseParkirDetail.cs" />
+    <Compile Include="Model\Parkir\ResponseParkirList.cs" />
+    <Compile Include="Model\Pengguna\ResponsePengguna.cs" />
+    <Compile Include="Model\Pengguna\ResponsePenggunaDetail.cs" />
+    <Compile Include="Model\Pengguna\ResponsePenggunaList.cs" />
     <Compile Include="Model\ResponseBy.cs" />
     <Compile Include="Model\Mahasiswa\ResponseMahasiswa.cs" />
     <Compile Include="Model\Pegawai\ResponsePegawai.cs" />
@@ -108,10 +114,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Parkir\" />
-    <Folder Include="Model\Pengguna\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
