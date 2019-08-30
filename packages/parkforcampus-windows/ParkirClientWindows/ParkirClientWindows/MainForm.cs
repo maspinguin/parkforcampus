@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace ParkirClientWindows
 {
     public partial class MainForm : Form
     {
+        public static SerialPort serial1;
         int pegawaiPerPage = 10, mahasiswaPerPage = 10, penggunaPerPage = 10, parkirPerPage =10;
         int pegawaiTotalPage = 0, mahasiswaTotalPage = 0, penggunaTotalPage = 0, parkirTotalPage = 0;
         int pegawaiActivePage = 1, mahasiswaActivePage = 1, penggunaActivePage = 1, parkirActivePage =1;
@@ -24,11 +26,11 @@ namespace ParkirClientWindows
         List<Model.ResponseMahasiswaDetail> listMahasiswa;
         List<Model.ResponsePenggunaDetail> listPengguna;
         List<Model.ResponseParkirDetail> listParkir;
+      
         
         public MainForm()
         {
             InitializeComponent();
-
             this.setFormProperty();
             this.getListPegawai();
             this.getListMahasiswa();
@@ -41,6 +43,13 @@ namespace ParkirClientWindows
             labelServerAddress.Text = Configuration.ENDPOINT;
             comboBoxPengguna_filter.SelectedIndex = 0;
             comboBoxParkir_filter.SelectedIndex = 0;
+
+            Configuration.setSerialPortSetting();
+            labelArduino1.Text = "PORT: " + Configuration.SERIALPORT1_NAME + " BAUDRATE: " + Configuration.SERIALPORT1_BAUDRATE;
+            labelArduino2.Text = "PORT: " + Configuration.SERIALPORT2_NAME + " BAUDRATE: " + Configuration.SERIALPORT2_BAUDRATE;
+            Configuration.OpenPort1(textBoxArduino1);
+
+            Configuration.OpenPort2(textBoxArduino2);
         }
 
         public void getListPegawai()
@@ -212,8 +221,11 @@ namespace ParkirClientWindows
                     limit = parkirPerPage,
                     orderBy = "desc",
                     search = parkirSearch,
-                    jenis = jenis
-                    
+                    jenis = jenis,
+                    dateStart = dateTimePicker1.Value.ToString("yyyy-MM-dd"),
+                    dateEnd = dateTimePicker2.Value.ToString("yyyy-MM-dd")
+
+
                 }
             );
             IRestResponse<Model.ResponseParkir> response2 = Configuration.CLIENT.Execute<Model.ResponseParkir>(request);
@@ -310,6 +322,29 @@ namespace ParkirClientWindows
             parkirActivePage++;
 
             getListParkir();
+        }
+
+        private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            parkirTotal = 0;
+            parkirTotalPage = 0;
+            parkirActivePage = 1;
+
+            this.getListParkir();
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            parkirTotal = 0;
+            parkirTotalPage = 0;
+            parkirActivePage = 1;
+
+            this.getListParkir();
         }
 
         private void buttonPengguna_search_Click(object sender, EventArgs e)
@@ -572,6 +607,7 @@ namespace ParkirClientWindows
             dataGridViewParkir.Refresh();
             dataGridViewParkir.DataSource = null;
             dataGridViewParkir.ColumnCount = 4;
+            dataGridViewParkir.Columns[2].Width = 200;
             dataGridViewParkir.Columns[0].HeaderText = "ID";
             dataGridViewParkir.Columns[1].HeaderText = "Nomor Induk";
             dataGridViewParkir.Columns[2].HeaderText = "Waktu";
@@ -603,5 +639,6 @@ namespace ParkirClientWindows
 
             getListPegawai();
         }
+        
     }
 }

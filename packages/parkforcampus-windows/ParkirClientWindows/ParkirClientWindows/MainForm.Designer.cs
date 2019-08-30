@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -102,6 +103,17 @@
             this.buttonParkir_next = new System.Windows.Forms.Button();
             this.comboBoxParkir_filter = new System.Windows.Forms.ComboBox();
             this.dataGridViewParkir = new System.Windows.Forms.DataGridView();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.textBoxArduino1 = new System.Windows.Forms.TextBox();
+            this.textBoxArduino2 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -125,6 +137,8 @@
             this.tableLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewParkir)).BeginInit();
+            this.flowLayoutPanel8.SuspendLayout();
+            this.flowLayoutPanel9.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -134,7 +148,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1185, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1331, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -165,13 +179,15 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tabControl1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel9, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 28);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1185, 509);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 79F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1331, 533);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -184,11 +200,11 @@
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 477);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 422);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1179, 29);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1325, 29);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // flowLayoutPanel3
@@ -196,9 +212,9 @@
             this.flowLayoutPanel3.Controls.Add(this.label4);
             this.flowLayoutPanel3.Controls.Add(this.labelArduino2);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(789, 3);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(885, 3);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(387, 23);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(437, 23);
             this.flowLayoutPanel3.TabIndex = 2;
             // 
             // label4
@@ -226,9 +242,9 @@
             this.flowLayoutPanel2.Controls.Add(this.label2);
             this.flowLayoutPanel2.Controls.Add(this.labelArduino1);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(396, 3);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(444, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(387, 23);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(435, 23);
             this.flowLayoutPanel2.TabIndex = 1;
             // 
             // label2
@@ -258,7 +274,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(387, 23);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(435, 23);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -291,7 +307,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1179, 468);
+            this.tabControl1.Size = new System.Drawing.Size(1325, 413);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -300,7 +316,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1171, 439);
+            this.tabPage1.Size = new System.Drawing.Size(1317, 384);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Data Parkir";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -311,7 +327,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1171, 439);
+            this.tabPage2.Size = new System.Drawing.Size(1317, 384);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Data Pengguna";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -636,12 +652,13 @@
             this.tableLayoutPanel5.RowCount = 2;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(1165, 433);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1311, 378);
             this.tableLayoutPanel5.TabIndex = 2;
             // 
             // flowLayoutPanel6
             // 
             this.flowLayoutPanel6.Controls.Add(this.buttonPengguna_add);
+            this.flowLayoutPanel6.Controls.Add(this.comboBoxPengguna_filter);
             this.flowLayoutPanel6.Controls.Add(this.label9);
             this.flowLayoutPanel6.Controls.Add(this.textBoxPengguna_search);
             this.flowLayoutPanel6.Controls.Add(this.buttonPengguna_search);
@@ -651,11 +668,10 @@
             this.flowLayoutPanel6.Controls.Add(this.labelPengguna_totalPage);
             this.flowLayoutPanel6.Controls.Add(this.buttonPengguna_previous);
             this.flowLayoutPanel6.Controls.Add(this.buttonPengguna_next);
-            this.flowLayoutPanel6.Controls.Add(this.comboBoxPengguna_filter);
             this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(1159, 44);
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(1305, 44);
             this.flowLayoutPanel6.TabIndex = 0;
             // 
             // buttonPengguna_add
@@ -671,7 +687,7 @@
             // 
             this.label9.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(195, 11);
+            this.label9.Location = new System.Drawing.Point(322, 11);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(53, 17);
             this.label9.TabIndex = 1;
@@ -680,7 +696,7 @@
             // textBoxPengguna_search
             // 
             this.textBoxPengguna_search.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.textBoxPengguna_search.Location = new System.Drawing.Point(254, 9);
+            this.textBoxPengguna_search.Location = new System.Drawing.Point(381, 9);
             this.textBoxPengguna_search.Name = "textBoxPengguna_search";
             this.textBoxPengguna_search.Size = new System.Drawing.Size(307, 22);
             this.textBoxPengguna_search.TabIndex = 2;
@@ -688,7 +704,7 @@
             // 
             // buttonPengguna_search
             // 
-            this.buttonPengguna_search.Location = new System.Drawing.Point(567, 3);
+            this.buttonPengguna_search.Location = new System.Drawing.Point(694, 3);
             this.buttonPengguna_search.Name = "buttonPengguna_search";
             this.buttonPengguna_search.Size = new System.Drawing.Size(80, 34);
             this.buttonPengguna_search.TabIndex = 9;
@@ -700,7 +716,7 @@
             // 
             this.label11.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(653, 11);
+            this.label11.Location = new System.Drawing.Point(780, 11);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(45, 17);
             this.label11.TabIndex = 3;
@@ -710,7 +726,7 @@
             // 
             this.labelPengguna_activePage.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelPengguna_activePage.AutoSize = true;
-            this.labelPengguna_activePage.Location = new System.Drawing.Point(704, 11);
+            this.labelPengguna_activePage.Location = new System.Drawing.Point(831, 11);
             this.labelPengguna_activePage.Name = "labelPengguna_activePage";
             this.labelPengguna_activePage.Size = new System.Drawing.Size(16, 17);
             this.labelPengguna_activePage.TabIndex = 4;
@@ -720,7 +736,7 @@
             // 
             this.label13.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(726, 11);
+            this.label13.Location = new System.Drawing.Point(853, 11);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(23, 17);
             this.label13.TabIndex = 5;
@@ -730,7 +746,7 @@
             // 
             this.labelPengguna_totalPage.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelPengguna_totalPage.AutoSize = true;
-            this.labelPengguna_totalPage.Location = new System.Drawing.Point(755, 11);
+            this.labelPengguna_totalPage.Location = new System.Drawing.Point(882, 11);
             this.labelPengguna_totalPage.Name = "labelPengguna_totalPage";
             this.labelPengguna_totalPage.Size = new System.Drawing.Size(16, 17);
             this.labelPengguna_totalPage.TabIndex = 6;
@@ -738,7 +754,7 @@
             // 
             // buttonPengguna_previous
             // 
-            this.buttonPengguna_previous.Location = new System.Drawing.Point(777, 3);
+            this.buttonPengguna_previous.Location = new System.Drawing.Point(904, 3);
             this.buttonPengguna_previous.Name = "buttonPengguna_previous";
             this.buttonPengguna_previous.Size = new System.Drawing.Size(80, 34);
             this.buttonPengguna_previous.TabIndex = 7;
@@ -748,7 +764,7 @@
             // 
             // buttonPengguna_next
             // 
-            this.buttonPengguna_next.Location = new System.Drawing.Point(863, 3);
+            this.buttonPengguna_next.Location = new System.Drawing.Point(990, 3);
             this.buttonPengguna_next.Name = "buttonPengguna_next";
             this.buttonPengguna_next.Size = new System.Drawing.Size(80, 34);
             this.buttonPengguna_next.TabIndex = 8;
@@ -765,7 +781,7 @@
             this.dataGridViewPengguna.Name = "dataGridViewPengguna";
             this.dataGridViewPengguna.ReadOnly = true;
             this.dataGridViewPengguna.RowTemplate.Height = 24;
-            this.dataGridViewPengguna.Size = new System.Drawing.Size(1159, 377);
+            this.dataGridViewPengguna.Size = new System.Drawing.Size(1305, 322);
             this.dataGridViewPengguna.TabIndex = 1;
             // 
             // comboBoxPengguna_filter
@@ -778,7 +794,7 @@
             "Pegawai",
             "Satpam",
             "Admin"});
-            this.comboBoxPengguna_filter.Location = new System.Drawing.Point(949, 7);
+            this.comboBoxPengguna_filter.Location = new System.Drawing.Point(195, 7);
             this.comboBoxPengguna_filter.Name = "comboBoxPengguna_filter";
             this.comboBoxPengguna_filter.Size = new System.Drawing.Size(121, 24);
             this.comboBoxPengguna_filter.TabIndex = 10;
@@ -790,32 +806,32 @@
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.Controls.Add(this.flowLayoutPanel7, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.dataGridViewParkir, 0, 1);
+            this.tableLayoutPanel6.Controls.Add(this.flowLayoutPanel8, 0, 2);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 2;
+            this.tableLayoutPanel6.RowCount = 3;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(1165, 433);
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1311, 378);
             this.tableLayoutPanel6.TabIndex = 3;
             // 
             // flowLayoutPanel7
             // 
             this.flowLayoutPanel7.Controls.Add(this.button1);
+            this.flowLayoutPanel7.Controls.Add(this.comboBoxParkir_filter);
             this.flowLayoutPanel7.Controls.Add(this.label12);
             this.flowLayoutPanel7.Controls.Add(this.textBoxParkir_search);
             this.flowLayoutPanel7.Controls.Add(this.buttonParkir_search);
-            this.flowLayoutPanel7.Controls.Add(this.label14);
-            this.flowLayoutPanel7.Controls.Add(this.labelParkir_activePage);
-            this.flowLayoutPanel7.Controls.Add(this.label16);
-            this.flowLayoutPanel7.Controls.Add(this.labelParkir_totalPage);
-            this.flowLayoutPanel7.Controls.Add(this.buttonParkir_previous);
-            this.flowLayoutPanel7.Controls.Add(this.buttonParkir_next);
-            this.flowLayoutPanel7.Controls.Add(this.comboBoxParkir_filter);
+            this.flowLayoutPanel7.Controls.Add(this.label15);
+            this.flowLayoutPanel7.Controls.Add(this.dateTimePicker1);
+            this.flowLayoutPanel7.Controls.Add(this.label17);
+            this.flowLayoutPanel7.Controls.Add(this.dateTimePicker2);
             this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel7.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(1159, 44);
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(1305, 44);
             this.flowLayoutPanel7.TabIndex = 0;
             // 
             // button1
@@ -831,7 +847,7 @@
             // 
             this.label12.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(195, 11);
+            this.label12.Location = new System.Drawing.Point(322, 11);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(53, 17);
             this.label12.TabIndex = 1;
@@ -840,14 +856,14 @@
             // textBoxParkir_search
             // 
             this.textBoxParkir_search.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.textBoxParkir_search.Location = new System.Drawing.Point(254, 9);
+            this.textBoxParkir_search.Location = new System.Drawing.Point(381, 9);
             this.textBoxParkir_search.Name = "textBoxParkir_search";
             this.textBoxParkir_search.Size = new System.Drawing.Size(307, 22);
             this.textBoxParkir_search.TabIndex = 2;
             // 
             // buttonParkir_search
             // 
-            this.buttonParkir_search.Location = new System.Drawing.Point(567, 3);
+            this.buttonParkir_search.Location = new System.Drawing.Point(694, 3);
             this.buttonParkir_search.Name = "buttonParkir_search";
             this.buttonParkir_search.Size = new System.Drawing.Size(80, 34);
             this.buttonParkir_search.TabIndex = 9;
@@ -859,7 +875,7 @@
             // 
             this.label14.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(653, 11);
+            this.label14.Location = new System.Drawing.Point(76, 11);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(45, 17);
             this.label14.TabIndex = 3;
@@ -869,7 +885,7 @@
             // 
             this.labelParkir_activePage.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelParkir_activePage.AutoSize = true;
-            this.labelParkir_activePage.Location = new System.Drawing.Point(704, 11);
+            this.labelParkir_activePage.Location = new System.Drawing.Point(3, 11);
             this.labelParkir_activePage.Name = "labelParkir_activePage";
             this.labelParkir_activePage.Size = new System.Drawing.Size(16, 17);
             this.labelParkir_activePage.TabIndex = 4;
@@ -879,7 +895,7 @@
             // 
             this.label16.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(726, 11);
+            this.label16.Location = new System.Drawing.Point(25, 11);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(23, 17);
             this.label16.TabIndex = 5;
@@ -889,7 +905,7 @@
             // 
             this.labelParkir_totalPage.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelParkir_totalPage.AutoSize = true;
-            this.labelParkir_totalPage.Location = new System.Drawing.Point(755, 11);
+            this.labelParkir_totalPage.Location = new System.Drawing.Point(54, 11);
             this.labelParkir_totalPage.Name = "labelParkir_totalPage";
             this.labelParkir_totalPage.Size = new System.Drawing.Size(16, 17);
             this.labelParkir_totalPage.TabIndex = 6;
@@ -897,7 +913,7 @@
             // 
             // buttonParkir_previous
             // 
-            this.buttonParkir_previous.Location = new System.Drawing.Point(777, 3);
+            this.buttonParkir_previous.Location = new System.Drawing.Point(127, 3);
             this.buttonParkir_previous.Name = "buttonParkir_previous";
             this.buttonParkir_previous.Size = new System.Drawing.Size(80, 34);
             this.buttonParkir_previous.TabIndex = 7;
@@ -907,7 +923,7 @@
             // 
             // buttonParkir_next
             // 
-            this.buttonParkir_next.Location = new System.Drawing.Point(863, 3);
+            this.buttonParkir_next.Location = new System.Drawing.Point(213, 3);
             this.buttonParkir_next.Name = "buttonParkir_next";
             this.buttonParkir_next.Size = new System.Drawing.Size(80, 34);
             this.buttonParkir_next.TabIndex = 8;
@@ -923,7 +939,7 @@
             "semua",
             "masuk",
             "keluar"});
-            this.comboBoxParkir_filter.Location = new System.Drawing.Point(949, 8);
+            this.comboBoxParkir_filter.Location = new System.Drawing.Point(195, 8);
             this.comboBoxParkir_filter.Name = "comboBoxParkir_filter";
             this.comboBoxParkir_filter.Size = new System.Drawing.Size(121, 24);
             this.comboBoxParkir_filter.TabIndex = 10;
@@ -938,14 +954,120 @@
             this.dataGridViewParkir.Name = "dataGridViewParkir";
             this.dataGridViewParkir.ReadOnly = true;
             this.dataGridViewParkir.RowTemplate.Height = 24;
-            this.dataGridViewParkir.Size = new System.Drawing.Size(1159, 377);
+            this.dataGridViewParkir.Size = new System.Drawing.Size(1305, 275);
             this.dataGridViewParkir.TabIndex = 1;
+            // 
+            // label15
+            // 
+            this.label15.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(780, 11);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(34, 17);
+            this.label15.TabIndex = 11;
+            this.label15.Text = "Dari";
+            // 
+            // label17
+            // 
+            this.label17.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(1026, 11);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(55, 17);
+            this.label17.TabIndex = 12;
+            this.label17.Text = "Sampai";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.dateTimePicker1.Location = new System.Drawing.Point(820, 9);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 22);
+            this.dateTimePicker1.TabIndex = 13;
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+            // 
+            // dateTimePicker2
+            // 
+            this.dateTimePicker2.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.dateTimePicker2.Location = new System.Drawing.Point(1087, 9);
+            this.dateTimePicker2.Name = "dateTimePicker2";
+            this.dateTimePicker2.Size = new System.Drawing.Size(200, 22);
+            this.dateTimePicker2.TabIndex = 14;
+            this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
+            // 
+            // flowLayoutPanel8
+            // 
+            this.flowLayoutPanel8.Controls.Add(this.labelParkir_activePage);
+            this.flowLayoutPanel8.Controls.Add(this.label16);
+            this.flowLayoutPanel8.Controls.Add(this.labelParkir_totalPage);
+            this.flowLayoutPanel8.Controls.Add(this.label14);
+            this.flowLayoutPanel8.Controls.Add(this.buttonParkir_previous);
+            this.flowLayoutPanel8.Controls.Add(this.buttonParkir_next);
+            this.flowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(3, 334);
+            this.flowLayoutPanel8.Name = "flowLayoutPanel8";
+            this.flowLayoutPanel8.Size = new System.Drawing.Size(1305, 41);
+            this.flowLayoutPanel8.TabIndex = 2;
+            // 
+            // serialPort1
+            // 
+            this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
+            // 
+            // flowLayoutPanel9
+            // 
+            this.flowLayoutPanel9.Controls.Add(this.label18);
+            this.flowLayoutPanel9.Controls.Add(this.textBoxArduino1);
+            this.flowLayoutPanel9.Controls.Add(this.label19);
+            this.flowLayoutPanel9.Controls.Add(this.textBoxArduino2);
+            this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 457);
+            this.flowLayoutPanel9.Name = "flowLayoutPanel9";
+            this.flowLayoutPanel9.Size = new System.Drawing.Size(1325, 73);
+            this.flowLayoutPanel9.TabIndex = 2;
+            // 
+            // label18
+            // 
+            this.label18.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(3, 16);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(93, 34);
+            this.label18.TabIndex = 4;
+            this.label18.Text = "Log Message\r\nArduino 1";
+            // 
+            // label19
+            // 
+            this.label19.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(655, 16);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(93, 34);
+            this.label19.TabIndex = 5;
+            this.label19.Text = "Log Message\r\nArduino 2";
+            // 
+            // textBoxArduino1
+            // 
+            this.textBoxArduino1.Location = new System.Drawing.Point(102, 3);
+            this.textBoxArduino1.Multiline = true;
+            this.textBoxArduino1.Name = "textBoxArduino1";
+            this.textBoxArduino1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxArduino1.Size = new System.Drawing.Size(547, 61);
+            this.textBoxArduino1.TabIndex = 6;
+            // 
+            // textBoxArduino2
+            // 
+            this.textBoxArduino2.Location = new System.Drawing.Point(754, 3);
+            this.textBoxArduino2.Multiline = true;
+            this.textBoxArduino2.Name = "textBoxArduino2";
+            this.textBoxArduino2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxArduino2.Size = new System.Drawing.Size(561, 61);
+            this.textBoxArduino2.TabIndex = 7;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1185, 537);
+            this.ClientSize = new System.Drawing.Size(1331, 561);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -983,6 +1105,10 @@
             this.flowLayoutPanel7.ResumeLayout(false);
             this.flowLayoutPanel7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewParkir)).EndInit();
+            this.flowLayoutPanel8.ResumeLayout(false);
+            this.flowLayoutPanel8.PerformLayout();
+            this.flowLayoutPanel9.ResumeLayout(false);
+            this.flowLayoutPanel9.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1064,5 +1190,16 @@
         private System.Windows.Forms.Button buttonParkir_next;
         private System.Windows.Forms.ComboBox comboBoxParkir_filter;
         private System.Windows.Forms.DataGridView dataGridViewParkir;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DateTimePicker dateTimePicker2;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel8;
+        private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel9;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox textBoxArduino1;
+        private System.Windows.Forms.TextBox textBoxArduino2;
     }
 }
