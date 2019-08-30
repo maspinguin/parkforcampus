@@ -70,7 +70,7 @@ class Api_model extends CI_Model {
                   return array('status' => 500,'message' => 'Internal server error.');
                } else {
                   $this->db->trans_commit();
-                  return array('status' => 200,'message' => 'Successfully login.','nomor_induk' => $id,'nama'=> $q2->nama, 'token' => $newtoken);
+                  return array('status' => 200,'message' => 'Successfully login.','nomor_induk' => $id, 'id_type'=>$q->id_type,'nama'=> $q2->nama, 'token' => $newtoken);
                }
             } else {
                return array('status' => 403,'message' => 'Wrong password.');
@@ -94,7 +94,7 @@ class Api_model extends CI_Model {
             return array('status' => 200, 'valid'=> false,'message' => 'Your session has been expired.');
         }else{
           $data = AUTHORIZATION::decode($token);
-          return array('status' => 200, 'nama' => $data->nama, 'nomor_induk'=> $data->nomor_induk, 'valid'=> true,'message' => 'Token valid.');
+          return array('status' => 200, 'nama' => $data->nama, 'nomor_induk'=> $data->nomor_induk, 'valid'=> true,'message' => 'Token valid.', 'id_type'=>$data->id_type);
         }
       }
     }

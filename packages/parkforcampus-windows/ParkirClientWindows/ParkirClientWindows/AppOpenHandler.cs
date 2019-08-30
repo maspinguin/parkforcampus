@@ -37,7 +37,19 @@ namespace ParkirClientWindows
                         {
                             Configuration.LOGINNAMA = response2.Data.nama;
                             Configuration.LOGINNIP = response2.Data.nomor_induk;
-                            Application.Run(new MainForm());
+                            Configuration.LOGINIDTYPE = response2.Data.id_type;
+
+                            if(Configuration.LOGINIDTYPE != 3 && Configuration.LOGINIDTYPE != 4 )
+                            {
+                                MessageBox.Show("User tidak diizinkan!");
+                                Configuration.configClass.SaveLinebyWord("ENDPOINT", "token", "null");
+                                Application.Run(new LoginForm());
+                            }
+                            else
+                            {
+                                Application.Run(new MainForm());
+                            }
+                            
                         }
                         else
                         {

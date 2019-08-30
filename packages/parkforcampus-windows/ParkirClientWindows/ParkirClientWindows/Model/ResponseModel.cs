@@ -15,6 +15,7 @@ namespace ParkirClientWindows.Model
         public string token { get; set; }
         public string nama { get; set; }
         public string nomor_induk { get; set; }
+        public int id_type { get; set; }
 
     }
  

@@ -912,7 +912,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1317, 398);
+            this.tabPage1.Size = new System.Drawing.Size(1317, 404);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Data Parkir";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -931,7 +931,7 @@
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(1311, 392);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1311, 398);
             this.tableLayoutPanel6.TabIndex = 3;
             // 
             // flowLayoutPanel8
@@ -943,7 +943,7 @@
             this.flowLayoutPanel8.Controls.Add(this.buttonParkir_previous);
             this.flowLayoutPanel8.Controls.Add(this.buttonParkir_next);
             this.flowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(3, 348);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(3, 354);
             this.flowLayoutPanel8.Name = "flowLayoutPanel8";
             this.flowLayoutPanel8.Size = new System.Drawing.Size(1305, 41);
             this.flowLayoutPanel8.TabIndex = 2;
@@ -1017,7 +1017,7 @@
             this.dataGridViewParkir.Name = "dataGridViewParkir";
             this.dataGridViewParkir.ReadOnly = true;
             this.dataGridViewParkir.RowTemplate.Height = 24;
-            this.dataGridViewParkir.Size = new System.Drawing.Size(1305, 289);
+            this.dataGridViewParkir.Size = new System.Drawing.Size(1305, 295);
             this.dataGridViewParkir.TabIndex = 1;
             // 
             // flowLayoutPanel7
@@ -1132,10 +1132,11 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(3, 29);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1325, 427);
+            this.tabControl1.Size = new System.Drawing.Size(1325, 433);
             this.tabControl1.TabIndex = 1;
             // 
             // flowLayoutPanel10

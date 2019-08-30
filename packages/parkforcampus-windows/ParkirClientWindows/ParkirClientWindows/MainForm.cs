@@ -364,7 +364,7 @@ namespace ParkirClientWindows
 
                 Configuration.configClass.SaveLinebyWord("ENDPOINT", "token", "null");
                 Application.Exit();
-                
+
             }
             else
             {
