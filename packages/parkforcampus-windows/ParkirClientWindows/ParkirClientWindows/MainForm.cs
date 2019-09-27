@@ -386,12 +386,39 @@ namespace ParkirClientWindows
 
         private void pingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ArduinoHandler.write(Configuration.SERIALPORT1, "ping", textBoxArduino1);
+            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "ping", textBoxArduino1,1);
         }
 
         private void pingToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            ArduinoHandler.write(Configuration.SERIALPORT2, "ping", textBoxArduino2);
+            ArduinoHandler.write(Configuration.SERIALPORT2.serial, "ping", textBoxArduino2,2);
+        }
+     
+        private void doReadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "doRead;"+Configuration.KeyA+";"+Configuration.KeyB+"", textBoxArduino1,1);
+            
+            
+        }
+
+        private void settingToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void doWriteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "writeCard;" + Configuration.KeyA + ";" + Configuration.KeyB + ";32303030333935000000000000000000", textBoxArduino1,1);
+        }
+
+        private void masukToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "portalModeMasuk;",textBoxArduino1,1);
+        }
+
+        private void keluarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "portalModeKeluar;", textBoxArduino1, 1);
         }
 
         private void buttonPengguna_search_Click(object sender, EventArgs e)

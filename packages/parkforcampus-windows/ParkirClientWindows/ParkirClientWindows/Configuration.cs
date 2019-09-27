@@ -17,9 +17,10 @@ namespace ParkirClientWindows
         public static RestClient CLIENT;
         public static string SERIALPORT1_NAME, SERIALPORT2_NAME;
         public static int SERIALPORT1_BAUDRATE, SERIALPORT2_BAUDRATE;
-        public static SerialPort SERIALPORT1, SERIALPORT2;
+        public static SerialPortHandler SERIALPORT1, SERIALPORT2;
         public static string LOGINNAMA, LOGINNIP;
         public static int LOGINIDTYPE;
+        public static string KeyA, KeyB;
        
         public static void getConfig()
         {
@@ -33,6 +34,8 @@ namespace ParkirClientWindows
             SERIALPORT1_BAUDRATE = Convert.ToInt32(configClass.IniReadValue("SERIALPORT1", "BAUDRATE"));
             SERIALPORT2_NAME = configClass.IniReadValue("SERIALPORT2", "PORTNAME");
             SERIALPORT2_BAUDRATE = Convert.ToInt32(configClass.IniReadValue("SERIALPORT2", "BAUDRATE"));
+            KeyA = configClass.IniReadValue("CARD", "DEFAULTKEY1");
+            KeyB = configClass.IniReadValue("CARD", "DEFAULTKEY2");
 
 
             CLIENT = new RestClient(ENDPOINT);
@@ -73,13 +76,13 @@ namespace ParkirClientWindows
 
         public static void setSerialPortSetting()
         {
-            SERIALPORT1 = new SerialPort();
-            SERIALPORT2 = new SerialPort();
-            SERIALPORT1.BaudRate = SERIALPORT1_BAUDRATE;
-            SERIALPORT1.PortName = SERIALPORT1_NAME;
+            SERIALPORT1 = new SerialPortHandler();
+            SERIALPORT2 = new SerialPortHandler();
+            SERIALPORT1.serial.BaudRate = SERIALPORT1_BAUDRATE;
+            SERIALPORT1.serial.PortName = SERIALPORT1_NAME;
 
-            SERIALPORT2.BaudRate = SERIALPORT2_BAUDRATE;
-            SERIALPORT2.PortName = SERIALPORT2_NAME;
+            SERIALPORT2.serial.BaudRate = SERIALPORT2_BAUDRATE;
+            SERIALPORT2.serial.PortName = SERIALPORT2_NAME;
         }
 
        
@@ -89,6 +92,15 @@ namespace ParkirClientWindows
             textbox.Text +=  Environment.NewLine + DateTime.Now + " : " + newMessage;
             textbox.SelectionStart = textbox.Text.Length;
             textbox.ScrollToCaret();
+        }
+
+        public static void invokeRenderTextLog(TextBox textbox, string newMessage)
+        {
+            textbox.Invoke((MethodInvoker)delegate {
+                textbox.Text += Environment.NewLine + DateTime.Now + " : " + newMessage;
+                textbox.SelectionStart = textbox.Text.Length;
+                textbox.ScrollToCaret();
+            });
         }
     }
 }
