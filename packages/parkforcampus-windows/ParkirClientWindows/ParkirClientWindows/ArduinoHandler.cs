@@ -14,16 +14,25 @@ namespace ParkirClientWindows
     {
         static TextBox textBox1;
         static TextBox textBox2;
+        private MainForm form;
         static string command1, command2;
         
         public static string serialMessage1 { get;private set; }
         public static string serialMessage2 { get;private set; }
-        public static void OpenPort1(TextBox textbox)
+
+        public ArduinoHandler(MainForm form1)
         {
+            this.form = form1;
+        }
+       
+        public void OpenPort1(TextBox textbox)
+        {
+          
             if(textBox1 == null)
             {
                 textBox1 = textbox;
             }
+            
             if (!SERIALPORT1.serial.IsOpen)
             {
                 try
@@ -46,7 +55,7 @@ namespace ParkirClientWindows
             }
         }
 
-        public static void OpenPort2(TextBox textbox)
+        public void OpenPort2(TextBox textbox)
         {
             if (textBox1 == null)
             {
@@ -102,7 +111,7 @@ namespace ParkirClientWindows
             }
         }
 
-        public static void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        public void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             string s = SERIALPORT1.serial.ReadLine().Trim();
             if(serialMessage1!= s)
@@ -136,13 +145,14 @@ namespace ParkirClientWindows
                 else if(s.Contains("keluar;data:"))
                 {
                     Debug.Write("proses keluar");
+                    
                     string data = s.Replace("keluar;data: ", "").Replace(" ", "");
                     prosesParkir(Helper.ConverterHex(data), "keluar");
                 }
             }
         }
 
-        private static void prosesParkir(string ni, string jenis)
+        private void prosesParkir(string ni, string jenis)
         {
             Debug.WriteLine("NO:" + ni);
             string nomor_induk = ni.Trim();
@@ -175,6 +185,8 @@ namespace ParkirClientWindows
                     }
                     else
                     {
+                        this.form.getListParkir();
+                       
                         Debug.WriteLine(response2.Data.data[0].status);
                     }
                     
@@ -188,7 +200,7 @@ namespace ParkirClientWindows
             }
         }
 
-        public static void serialPort2_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        public void serialPort2_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             string s = SERIALPORT2.serial.ReadLine().Trim();
             if(serialMessage2!= s)

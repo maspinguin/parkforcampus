@@ -26,11 +26,12 @@ namespace ParkirClientWindows
         List<Model.ResponseMahasiswaDetail> listMahasiswa;
         List<Model.ResponsePenggunaDetail> listPengguna;
         List<Model.ResponseParkirDetail> listParkir;
-      
-        
+        private ArduinoHandler arduinoHandler1;
+
         public MainForm()
         {
             InitializeComponent();
+            arduinoHandler1 = new ArduinoHandler(this);
             this.setFormProperty();
             this.getListPegawai();
             this.getListMahasiswa();
@@ -48,8 +49,9 @@ namespace ParkirClientWindows
             Configuration.setSerialPortSetting();
             labelArduino1.Text = "PORT: " + Configuration.SERIALPORT1_NAME + " BAUDRATE: " + Configuration.SERIALPORT1_BAUDRATE;
             labelArduino2.Text = "PORT: " + Configuration.SERIALPORT2_NAME + " BAUDRATE: " + Configuration.SERIALPORT2_BAUDRATE;
-            ArduinoHandler.OpenPort1(textBoxArduino1);
-            ArduinoHandler.OpenPort2(textBoxArduino2);
+            //ArduinoHandler.OpenPort1(textBoxArduino1, this);
+            arduinoHandler1.OpenPort1(textBoxArduino1);
+            arduinoHandler1.OpenPort2(textBoxArduino2);
         }
 
         public void getListPegawai()
@@ -205,63 +207,130 @@ namespace ParkirClientWindows
             }
         }
 
-        private void getListParkir()
+        public void getListParkir()
         {
-            string path = "Apimobile/list_parkir";
-            RestRequest request = Configuration.getHttpConfig(path);
-            string jenis = "";
-            if(comboBoxParkir_filter.SelectedItem.ToString() != "semua")
+            if(this.comboBoxParkir_filter.InvokeRequired)
             {
-                jenis = comboBoxParkir_filter.SelectedItem.ToString();
-            }
-            request.AddJsonBody(
-                new
+                string path = "Apimobile/list_parkir";
+                RestRequest request = Configuration.getHttpConfig(path);
+                string jenis = "";
+                comboBoxParkir_filter.Invoke((MethodInvoker)delegate
                 {
-                    start = parkirStart,
-                    limit = parkirPerPage,
-                    orderBy = "desc",
-                    search = parkirSearch,
-                    jenis = jenis,
-                    dateStart = dateTimePicker1.Value.ToString("yyyy-MM-dd"),
-                    dateEnd = dateTimePicker2.Value.ToString("yyyy-MM-dd")
-
-
-                }
-            );
-            IRestResponse<Model.ResponseParkir> response2 = Configuration.CLIENT.Execute<Model.ResponseParkir>(request);
-            if (response2 != null)
-            {
-
-
-                if (response2.Data.data == null)
-                {
-
-                    MessageBox.Show(response2.Data.message, "Error Status " + response2.Data.status);
-                    parkirTotal = 0;
-
-
-                    if (response2.Data.status == 401)
+                    if (comboBoxParkir_filter.SelectedItem.ToString() != "semua")
                     {
-                        this.Hide();
-                        LoginForm a = new LoginForm();
-                        a.ShowDialog();
+                        jenis = comboBoxParkir_filter.SelectedItem.ToString();
+                    }
+                });
+                
+                request.AddJsonBody(
+                    new
+                    {
+                        start = parkirStart,
+                        limit = parkirPerPage,
+                        orderBy = "desc",
+                        search = parkirSearch,
+                        jenis = jenis,
+                        dateStart = dateTimePicker1.Value.ToString("yyyy-MM-dd"),
+                        dateEnd = dateTimePicker2.Value.ToString("yyyy-MM-dd")
+
+
+                    }
+                );
+                IRestResponse<Model.ResponseParkir> response2 = Configuration.CLIENT.Execute<Model.ResponseParkir>(request);
+                if (response2 != null)
+                {
+
+
+                    if (response2.Data.data == null)
+                    {
+
+                        MessageBox.Show(response2.Data.message, "Error Status " + response2.Data.status);
+                        parkirTotal = 0;
+
+
+                        if (response2.Data.status == 401)
+                        {
+                            this.Hide();
+                            LoginForm a = new LoginForm();
+                            a.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine(response2.Data.data[0].data.Count);
+                        listParkir = response2.Data.data[0].data;
+
+                        parkirTotal = response2.Data.data[0].total;
+                        this.setPaginationParkir();
+                        this.setTableParkir();
                     }
                 }
                 else
                 {
-                    Debug.WriteLine(response2.Data.data[0].data.Count);
-                    listParkir = response2.Data.data[0].data;
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
 
-                    parkirTotal = response2.Data.data[0].total;
-                    this.setPaginationParkir();
-                    this.setTableParkir();
+
+            } else
+            {
+                string path = "Apimobile/list_parkir";
+                RestRequest request = Configuration.getHttpConfig(path);
+                string jenis = "";
+                if (comboBoxParkir_filter.SelectedItem.ToString() != "semua")
+                {
+                    jenis = comboBoxParkir_filter.SelectedItem.ToString();
+                }
+                request.AddJsonBody(
+                    new
+                    {
+                        start = parkirStart,
+                        limit = parkirPerPage,
+                        orderBy = "desc",
+                        search = parkirSearch,
+                        jenis = jenis,
+                        dateStart = dateTimePicker1.Value.ToString("yyyy-MM-dd"),
+                        dateEnd = dateTimePicker2.Value.ToString("yyyy-MM-dd")
+
+
+                    }
+                );
+                IRestResponse<Model.ResponseParkir> response2 = Configuration.CLIENT.Execute<Model.ResponseParkir>(request);
+                if (response2 != null)
+                {
+
+
+                    if (response2.Data.data == null)
+                    {
+
+                        MessageBox.Show(response2.Data.message, "Error Status " + response2.Data.status);
+                        parkirTotal = 0;
+
+
+                        if (response2.Data.status == 401)
+                        {
+                            this.Hide();
+                            LoginForm a = new LoginForm();
+                            a.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine(response2.Data.data[0].data.Count);
+                        listParkir = response2.Data.data[0].data;
+
+                        parkirTotal = response2.Data.data[0].total;
+                        this.setPaginationParkir();
+                        this.setTableParkir();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
                 }
             }
-            else
-            {
-                MessageBox.Show("Network/ Server Error!");
-                Application.Exit();
-            }
+            
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -376,12 +445,13 @@ namespace ParkirClientWindows
 
         private void connectReconnectToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            ArduinoHandler.OpenPort1(textBoxArduino1);
+           
+            arduinoHandler1.OpenPort1(textBoxArduino1);
         }
 
         private void connectReconnectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ArduinoHandler.OpenPort2(textBoxArduino2);
+            arduinoHandler1.OpenPort2(textBoxArduino2);
         }
 
         private void pingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -567,26 +637,88 @@ namespace ParkirClientWindows
         {
             parkirTotalPage = (int)Math.Ceiling((decimal)parkirTotal / (decimal)parkirPerPage);
 
-            if (parkirTotalPage <= parkirActivePage)
+            if (buttonParkir_next.InvokeRequired)
             {
-                buttonParkir_next.Enabled = false;
+                buttonParkir_next.Invoke((MethodInvoker)delegate
+                {
+                    if (parkirTotalPage <= parkirActivePage)
+                    {
+                        buttonParkir_next.Enabled = false;
+
+                    }
+                    else
+                    {
+                        buttonParkir_next.Enabled = true;
+                    }
+
+                });
             }
             else
             {
-                buttonParkir_next.Enabled = true;
+                if (parkirTotalPage <= parkirActivePage)
+                {
+                    buttonParkir_next.Enabled = false;
+
+                }
+                else
+                {
+                    buttonParkir_next.Enabled = true;
+                }
+
             }
 
-            if (parkirActivePage <= 1)
+            if(buttonParkir_previous.InvokeRequired)
             {
-                buttonParkir_previous.Enabled = false;
-            }
-            else
+                buttonParkir_previous.Invoke((MethodInvoker)delegate
+               {
+                   if (parkirActivePage <= 1)
+                   {
+                       buttonParkir_previous.Enabled = false;
+                   }
+                   else
+                   {
+                       buttonParkir_previous.Enabled = true;
+                   }
+
+               });
+            } else
             {
-                buttonParkir_previous.Enabled = true;
+                if (parkirActivePage <= 1)
+                {
+                    buttonParkir_previous.Enabled = false;
+                }
+                else
+                {
+                    buttonParkir_previous.Enabled = true;
+                }
+
             }
 
-            labelParkir_totalPage.Text = parkirTotalPage.ToString();
-            labelParkir_activePage.Text = parkirActivePage.ToString();
+            if(labelParkir_totalPage.InvokeRequired)
+            {
+                labelParkir_totalPage.Invoke((MethodInvoker)delegate
+                {
+                    labelParkir_totalPage.Text = parkirTotalPage.ToString();
+
+                });
+            } else
+            {
+                labelParkir_totalPage.Text = parkirTotalPage.ToString();
+
+            }
+
+            if(labelParkir_activePage.InvokeRequired)
+            {
+                labelParkir_activePage.Invoke((MethodInvoker)delegate
+                {
+                    labelParkir_activePage.Text = parkirActivePage.ToString();
+
+                });
+            }else
+            {
+                labelParkir_activePage.Text = parkirActivePage.ToString();
+
+            }
         }
 
         private void setTabelPegawai()
@@ -677,25 +809,53 @@ namespace ParkirClientWindows
 
         private void setTableParkir()
         {
-            dataGridViewParkir.Rows.Clear();
-            dataGridViewParkir.Refresh();
-            dataGridViewParkir.DataSource = null;
-            dataGridViewParkir.ColumnCount = 4;
-            dataGridViewParkir.Columns[2].Width = 200;
-            dataGridViewParkir.Columns[0].HeaderText = "ID";
-            dataGridViewParkir.Columns[1].HeaderText = "Nomor Induk";
-            dataGridViewParkir.Columns[2].HeaderText = "Waktu";
-            dataGridViewParkir.Columns[3].HeaderText = "Jenis Parkir";
-            for (int i = 0; i < listParkir.Count; i++)
+            if(dataGridViewParkir.InvokeRequired)
             {
-               
-                dataGridViewParkir.Rows.Add(
-                    listParkir[i].id,
-                    listParkir[i].nomor_induk,
-                    listParkir[i].waktu,
-                    listParkir[i].jenis_parkir
-                    );
+                dataGridViewParkir.Invoke((MethodInvoker)delegate
+               {
+                   dataGridViewParkir.Rows.Clear();
+                   dataGridViewParkir.Refresh();
+                   dataGridViewParkir.DataSource = null;
+                   dataGridViewParkir.ColumnCount = 4;
+                   dataGridViewParkir.Columns[2].Width = 200;
+                   dataGridViewParkir.Columns[0].HeaderText = "ID";
+                   dataGridViewParkir.Columns[1].HeaderText = "Nomor Induk";
+                   dataGridViewParkir.Columns[2].HeaderText = "Waktu";
+                   dataGridViewParkir.Columns[3].HeaderText = "Jenis Parkir";
+                   for (int i = 0; i < listParkir.Count; i++)
+                   {
+
+                       dataGridViewParkir.Rows.Add(
+                           listParkir[i].id,
+                           listParkir[i].nomor_induk,
+                           listParkir[i].waktu,
+                           listParkir[i].jenis_parkir
+                           );
+                   }
+               });
+            } else
+            {
+                dataGridViewParkir.Rows.Clear();
+                dataGridViewParkir.Refresh();
+                dataGridViewParkir.DataSource = null;
+                dataGridViewParkir.ColumnCount = 4;
+                dataGridViewParkir.Columns[2].Width = 200;
+                dataGridViewParkir.Columns[0].HeaderText = "ID";
+                dataGridViewParkir.Columns[1].HeaderText = "Nomor Induk";
+                dataGridViewParkir.Columns[2].HeaderText = "Waktu";
+                dataGridViewParkir.Columns[3].HeaderText = "Jenis Parkir";
+                for (int i = 0; i < listParkir.Count; i++)
+                {
+
+                    dataGridViewParkir.Rows.Add(
+                        listParkir[i].id,
+                        listParkir[i].nomor_induk,
+                        listParkir[i].waktu,
+                        listParkir[i].jenis_parkir
+                        );
+                }
             }
+            
         }
 
         private void buttonPegawai_next_Click(object sender, EventArgs e)
