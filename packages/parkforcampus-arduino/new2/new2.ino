@@ -625,12 +625,12 @@ void openPortal() {
   delay(50);
   int US1 = ultrasonic1.ping_cm();
   int US2 = ultrasonic2.ping_cm();
-  Serial.print("Hasil Sensor 1 :");
-  Serial.print(US1);
-  Serial.print("cm     |     ");
-  Serial.print("Hasil Sensor 2 :");
-  Serial.print(US2);
-  Serial.println("cm");
+//  Serial.print("Hasil Sensor 1 :");
+//  Serial.print(US1);
+//  Serial.print("cm     |     ");
+//  Serial.print("Hasil Sensor 2 :");
+//  Serial.print(US2);
+//  Serial.println("cm");
 
    if((US1>0 && US2> 0) && (US1 <= 20 || US2 <= 20)){
     servoAne.write(90);

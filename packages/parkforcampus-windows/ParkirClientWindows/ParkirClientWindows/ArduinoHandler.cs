@@ -87,7 +87,7 @@ namespace ParkirClientWindows
             }
         }
 
-        public static void write(SerialPort serialPort,string cmd, TextBox textbox, int port, bool newLine = true)
+        public static void write(SerialPort serialPort,string cmd, TextBox textbox = null, int port = 1, bool newLine = true)
         {
             try
             {
@@ -110,7 +110,11 @@ namespace ParkirClientWindows
                 
             }catch(Exception err)
             {
-                renderTextLog(textbox, err.Message);
+                if(textbox != null)
+                {
+                    renderTextLog(textbox, err.Message);
+                }
+                
             }
         }
 
@@ -199,7 +203,7 @@ namespace ParkirClientWindows
                     {
                         this.form.getListParkir();
                         invokeRenderTextLog(textBoxLogApplication, "Success:" + response2.Data.data[0].status + " : " + response2.Data.data[0].message + "(" + id + ")");
-                       
+                        write(SERIALPORT1.serial, "openPortal;");
                         Debug.WriteLine(response2.Data.data[0].status);
                     }
                     
