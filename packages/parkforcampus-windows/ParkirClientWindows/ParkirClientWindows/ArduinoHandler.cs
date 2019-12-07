@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,15 +15,17 @@ namespace ParkirClientWindows
     {
         static TextBox textBox1;
         static TextBox textBox2;
+        TextBox textBoxLogApplication;
         private MainForm form;
-        static string command1, command2;
+        static string command1 = "", command2="";
         
         public static string serialMessage1 { get;private set; }
         public static string serialMessage2 { get;private set; }
 
-        public ArduinoHandler(MainForm form1)
+        public ArduinoHandler(MainForm form1, TextBox textBoxLogApplication)
         {
             this.form = form1;
+            this.textBoxLogApplication = textBoxLogApplication;
         }
        
         public void OpenPort1(TextBox textbox)
@@ -116,7 +119,6 @@ namespace ParkirClientWindows
             string s = SERIALPORT1.serial.ReadLine().Trim();
             if(serialMessage1!= s)
             {
-                Debug.WriteLine("Contains" + s.Contains("data:"));
                 serialMessage1 = s;
                 invokeRenderTextLog(textBox1, s);
 
@@ -138,31 +140,39 @@ namespace ParkirClientWindows
                     // process masuk 
                     Debug.Write("proses masuk");
                     string data = s.Replace("masuk;data: ", "").Replace(" ", "");
-                    prosesParkir(Helper.ConverterHex(data), "masuk");
+                    data = Helper.ConverterHex(data);
+                    prosesParkir(data, "masuk");
                     
-                    MessageBox.Show(Helper.ConverterHex(data));
+                   // MessageBox.Show(Helper.ConverterHex(data));
                 }
                 else if(s.Contains("keluar;data:"))
                 {
                     Debug.Write("proses keluar");
                     
                     string data = s.Replace("keluar;data: ", "").Replace(" ", "");
-                    prosesParkir(Helper.ConverterHex(data), "keluar");
+                    data = Helper.ConverterHex(data);
+                    prosesParkir(data, "keluar");
                 }
             }
         }
 
         private void prosesParkir(string ni, string jenis)
         {
-            Debug.WriteLine("NO:" + ni);
+            
+            //Debug.WriteLine("NO:" + ni);
             string nomor_induk = ni.Trim();
             string path = "Apimobile/proses_parkir";
             RestRequest request = Configuration.getHttpConfig(path);
+
+            //nomor_induk = Convert.ToString(ni);
+            int id = 0;
+            int.TryParse(nomor_induk, out id);
            
+
             request.AddJsonBody(
                 new
                 {
-                    nomor_induk = Convert.ToInt32(nomor_induk),
+                   nomor_induk = id,
                     jenis = jenis
                 }
             );
@@ -174,18 +184,21 @@ namespace ParkirClientWindows
                 if (response2.Data.data == null)
                 {
 
-                    MessageBox.Show(response2.Data.message, "Error Status " + response2.Data.status);
+                    invokeRenderTextLog(textBoxLogApplication, "Error Status " + response2.Data.status + " : " + response2.Data.message + "("+id+")");
                     
                 }
                 else
                 {
                     if(response2.Data.data[0].status == 400)
                     {
-                        MessageBox.Show(response2.Data.data[0].message, "Error Status " + response2.Data.data[0].status);
+                        invokeRenderTextLog(textBoxLogApplication, "Error Status " + response2.Data.data[0].status + " : " + response2.Data.data[0].message + "("+id+")");
+
+                        //MessageBox.Show(response2.Data.data[0].message, "Error Status " + response2.Data.data[0].status);
                     }
                     else
                     {
                         this.form.getListParkir();
+                        invokeRenderTextLog(textBoxLogApplication, "Success:" + response2.Data.data[0].status + " : " + response2.Data.data[0].message + "(" + id + ")");
                        
                         Debug.WriteLine(response2.Data.data[0].status);
                     }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ParkirClientWindows
 {
@@ -26,26 +27,33 @@ namespace ParkirClientWindows
                     ascii += character;
 
                 }
-
+                //Debug.WriteLine("convert: " + ascii);
                 return ascii;
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex) {
+               //Debug.WriteLine("convert: " + ex.Message);
+                return string.Empty;
 
-            return string.Empty;
+            }
+
+            //return string.Empty;
         }
 
         public static string ASCIItoHex(string Value)
         {
+            /*
             if(Value.Length < 16)
             {
                 string addZero = "";
                 for(int i= 0; i< 16-Value.Length; i++)
                 {
-                    addZero += "0";
+                    addZero += "";
                 }
                 Value += addZero;
                
             }
+            */
+            
             StringBuilder sb = new StringBuilder();
 
             byte[] inputByte = Encoding.UTF8.GetBytes(Value);
@@ -55,7 +63,20 @@ namespace ParkirClientWindows
                 sb.Append(string.Format("{0:x2}", b));
             }
 
-            return sb.ToString();
+            string newString = sb.ToString();
+
+            if (newString.Length < 32)
+            {
+                string addZero = "";
+                for (int i = 0; i <  32 - newString.Length; i++)
+                {
+                    addZero += "0";
+                }
+                newString += addZero;
+
+            }
+            Debug.WriteLine("new string: "+ newString);
+            return newString;
         }
     }
 }

@@ -3,8 +3,15 @@
 
 #define RST_PIN         5           // Configurable, see typical pin layout above
 #define SS_PIN          53          // Configurable, see typical pin layout above
+#define SS_PIN_2          45  
+constexpr uint8_t NR_OF_READERS = 2;
+//MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
+byte ssPins[] = {SS_PIN, SS_PIN_2};
 
-MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
+byte readedCard[NR_OF_READERS][4];  // Matrix for storing UID over each reader
+MFRC522 Arr_mfrc522[NR_OF_READERS]; 
+MFRC522 mfrc522;
+MFRC522 mfrc522B;
 
 
 MFRC522::MIFARE_Key oldKeyA;
@@ -20,8 +27,19 @@ void setup() {
   SPI.begin();
   while (!Serial);    // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
     SPI.begin();        // Init SPI bus
-    mfrc522.PCD_Init(); // Init MFRC522 card
+    //mfrc522.PCD_Init(); // Init MFRC522 card
+  for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) 
+   {
+    Arr_mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN); // Init each MFRC522 card
+   }
 
+   mfrc522 = Arr_mfrc522[0];
+   mfrc522B = Arr_mfrc522[1];
+   
+
+   
+ pinMode(RST_PIN, OUTPUT);
+ digitalWrite(RST_PIN, LOW); 
 }
 
 String input;
@@ -83,6 +101,9 @@ void loop() {
     if(command == "doRead") {
       doRead(var1,var2,"");
     }
+    if(command == "doRead2") {
+      doRead2(var1,var2,"");
+    }
     if(command == "writeCard" && var1 != ""&& var2 != ""&& var3 != "") {
        portalModeMasuk = false;
        portalModeKeluar = false;
@@ -98,6 +119,7 @@ void loop() {
     if(command == "startModePortal") {
     
       if(!portalMode) {
+        Serial.println("Portal Mode Dimulai..");
         portalMode = true;
         command = "";
         var1 = "";
@@ -135,6 +157,20 @@ void loop() {
         var4 = "";
       } else {
         Serial.println("Portal Mode Keluar Sudah Aktif!!!");
+      }
+    }
+
+    if(command == "stopModePortal") {
+      if(portalMode) {
+        Serial.println("Portal Mode Berhenti...");
+         portalMode = false;
+        command = "";
+        var1 = "";
+        var2 = "";
+        var3 = "";
+        var4 = "";
+      } else {
+        Serial.println("Portal Mode Telah Berhenti!!!");
       }
     }
 
@@ -180,13 +216,17 @@ void loop() {
     }
     
     if(portalMode) {
-        Serial.println("Portal Mode");  
+        //Serial.println("Portal Mode");  
+         doRead(var1, var2,"masuk");
+          doRead2(var1, var2,"keluar");
         delay(1000);
      }
 }
 
 
 void doRead(String _keyA, String _keyB, String mode){
+  digitalWrite(RST_PIN, HIGH);   // Get RC522 reader out of hard low power mode
+  mfrc522.PCD_Init(); 
   if ( ! mfrc522.PICC_IsNewCardPresent()) {
         if(mode =="") {
            Serial.println("Please insert your card ... ");
@@ -277,6 +317,103 @@ void doRead(String _keyA, String _keyB, String mode){
     
     command = "";
 }
+
+void doRead2(String _keyA, String _keyB, String mode){
+  digitalWrite(RST_PIN, HIGH);   // Get RC522 reader out of hard low power mode
+  mfrc522B.PCD_Init(); 
+  if ( ! mfrc522B.PICC_IsNewCardPresent()) {
+        if(mode =="") {
+           Serial.println("Please insert your card ... ");
+        }
+       
+        delay(1000);
+        return;
+    }
+    // Select one of the cards
+  if ( ! mfrc522B.PICC_ReadCardSerial()) {
+        if(mode == ""){
+          Serial.println("Please insert your card ... ");
+        }
+      
+      delay(1000);
+      return;
+  } 
+
+   if(_keyA != "" && _keyB != "") {
+      // converting _keyA into &keyA
+      keyA = convertKeyStringToKeyByte(_keyA);
+      // converting _keyB into &keyB
+      keyB = convertKeyStringToKeyByte(_keyB);
+    }
+    else {
+       // converting _keyA into &keyA
+      keyA = convertKeyStringToKeyByte(defaultKeyA);
+      // converting _keyB into &keyB
+      keyB = convertKeyStringToKeyByte(defaultKeyB);
+
+    }
+    
+
+ 
+
+     // In this sample we use the second sector,
+    // that is: sector #1, covering block #4 up to and including block #7
+    byte sector         = 1;
+    byte blockAddr      = 4;
+    byte dataBlock[]    = {
+        0x62, 0x61, 0x6e, 0x67, //  1,  2,   3,  4,
+        0x20, 0x06, 0x07, 0x08, //  5,  6,   7,  8,
+        0x09, 0x0a, 0xff, 0x0b, //  9, 10, 255, 11,
+        0x0c, 0x0d, 0x0e, 0x0f  // 12, 13, 14, 15
+    };
+    byte trailerBlock   = 7;
+    MFRC522::StatusCode status;
+    byte buffer[18];
+    byte size = sizeof(buffer);
+
+    
+    Serial.println(F("Authenticating using key A..."));
+    status = (MFRC522::StatusCode) mfrc522B.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &keyA , &(mfrc522B.uid));
+    if (status != MFRC522::STATUS_OK) {
+        Serial.print(F("PCD_Authenticate() failed: "));
+        Serial.println(mfrc522B.GetStatusCodeName(status));
+        return;
+    }
+
+    Serial.println(F("Authenticating again using key B..."));
+    status = (MFRC522::StatusCode) mfrc522B.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_B, trailerBlock, &keyB, &(mfrc522B.uid));
+    if (status != MFRC522::STATUS_OK) {
+        Serial.print(F("PCD_Authenticate() failed: "));
+        Serial.println(mfrc522B.GetStatusCodeName(status));
+        return;
+    }
+
+    // Read data from the block (again, should now be what we have written)
+    Serial.print(F("Reading data from block ")); Serial.print(blockAddr);
+    Serial.println(F(" ..."));
+    status = (MFRC522::StatusCode) mfrc522B.MIFARE_Read(blockAddr, buffer, &size);
+    if (status != MFRC522::STATUS_OK) {
+        Serial.print(F("MIFARE_Read() failed: "));
+        Serial.println(mfrc522B.GetStatusCodeName(status));
+    }
+    Serial.print(F("Data in block ")); Serial.print(blockAddr); Serial.println(F(":"));
+    if(mode == "") {
+      dump_byte_array(buffer, 16); Serial.println();
+    } else {
+      dump_byte_array_2(buffer, 16, mode +";"); Serial.println();
+    }
+    
+    
+
+     // Halt PICC
+    mfrc522B.PICC_HaltA();
+    // Stop encryption on PCD
+    mfrc522B.PCD_StopCrypto1();
+    
+    command = "";
+}
+
+
 void doWrite(String _keyA, String _keyB, String value) {
    if ( ! mfrc522.PICC_IsNewCardPresent()) {
         Serial.println("Please insert your new card ... ");

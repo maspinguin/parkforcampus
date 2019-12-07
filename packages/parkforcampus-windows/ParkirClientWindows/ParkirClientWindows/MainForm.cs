@@ -31,7 +31,7 @@ namespace ParkirClientWindows
         public MainForm()
         {
             InitializeComponent();
-            arduinoHandler1 = new ArduinoHandler(this);
+            arduinoHandler1 = new ArduinoHandler(this, textBoxLogApplication);
             this.setFormProperty();
             this.getListPegawai();
             this.getListMahasiswa();
@@ -478,7 +478,8 @@ namespace ParkirClientWindows
 
         private void doWriteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "writeCard;" + Configuration.KeyA + ";" + Configuration.KeyB + ";32303030333935000000000000000000", textBoxArduino1,1);
+            string card = "32303030333935000000000000000000";
+            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "writeCard;" + Configuration.KeyA + ";" + Configuration.KeyB + ";"+card, textBoxArduino1,1);
         }
 
         private void masukToolStripMenuItem_Click(object sender, EventArgs e)
@@ -489,6 +490,27 @@ namespace ParkirClientWindows
         private void keluarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ArduinoHandler.write(Configuration.SERIALPORT1.serial, "portalModeKeluar;", textBoxArduino1, 1);
+        }
+
+        private void textBoxParkir_search_TextChanged(object sender, EventArgs e)
+        {
+            parkirSearch = textBoxParkir_search.Text;
+        }
+
+        private void dataGridViewPengguna_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if(e.ColumnIndex == 6)
+            {
+                string no_kartu = dataGridViewPengguna.Rows[e.RowIndex].Cells[1].Value.ToString();
+                //MessageBox.Show(Helper.ASCIItoHex(no_kartu));
+                ArduinoHandler.write(Configuration.SERIALPORT1.serial, "writeCard;" + Configuration.KeyA + ";" + Configuration.KeyB + ";"+Helper.ASCIItoHex(no_kartu), textBoxArduino1, 1);
+
+            }
+        }
+
+        private void portalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "startModePortal;", textBoxArduino1, 1);
         }
 
         private void buttonPengguna_search_Click(object sender, EventArgs e)
@@ -804,6 +826,15 @@ namespace ParkirClientWindows
                     listPengguna[i].no_kartu,
                     tipe
                     );
+            }
+
+            DataGridViewButtonColumn button = new DataGridViewButtonColumn();
+            {
+                button.Name = "writeCard";
+                button.HeaderText = "Aksi";
+                button.Text = "Write Card";
+                button.UseColumnTextForButtonValue = true; //dont forget this line
+                this.dataGridViewPengguna.Columns.Add(button);
             }
         }
 
