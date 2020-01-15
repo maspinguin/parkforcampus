@@ -709,4 +709,77 @@ class Api_model extends CI_Model {
             return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
         }
     }
+
+    public function list_pegawai_non_pengguna($start=null, $limit=null, $order='asc', $search = null) {
+        $totalquery = "select count(*) as count from `tbl_pegawai` as a
+        WHERE a.`status_id` = 1
+        AND a.nip NOT IN (SELECT DISTINCT nomor_induk from tbl_pengguna as b WHERE b.`id_type` = 2 OR b.`id_type` = 3 AND deleted_by != '' AND b.status_id = 1)
+          ";
+        if(isset($search)) {
+            $totalquery.= " AND (nip LIKE '%".$search."%' OR nama LIKE '%".$search."%')";
+        }
+
+        $query = "
+          SELECT *
+          FROM `tbl_pegawai` as a
+          WHERE a.`status_id` = 1
+          AND a.nip NOT IN (SELECT DISTINCT nomor_induk from tbl_pengguna as b WHERE b.`id_type` = 2 OR b.`id_type` = 3 AND deleted_by != '' AND b.status_id = 1)
+        ";
+
+        if(isset($search)) {
+            $query.= " AND (nip LIKE '%".$search."%' OR nama LIKE '%".$search."%')";
+        }
+
+        if(isset($order)) {
+            $query.= " ORDER BY id ".$order;
+        }
+        if(isset($start) && isset($limit)) {
+            $query.= " LIMIT ".$limit." OFFSET ".$start;
+        }
+
+        try {
+            $data = $this->db->query($query)->result();
+            $total = $this->db->query($totalquery)->result();
+
+            return array('status' => 200, 'total' =>$total[0]->count, 'data' => $data);
+        } catch(Exception $err) {
+            return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
+        }
+    }
+
+    public function list_mahasiswa_non_pengguna($start=null, $limit=null, $order='asc', $search = null) {
+        $totalquery = "select count(*) as count from `tbl_mahasiswa` as a
+        WHERE a.`status_id` = 1
+        AND a.nim NOT IN (SELECT DISTINCT nomor_induk from tbl_pengguna as b WHERE b.`id_type` = 1 AND b.status_id = 1)";
+        if(isset($search)) {
+            $totalquery.= " AND (nim LIKE '%".$search."%' OR nama LIKE '%".$search."%')";
+        }
+
+        $query = "
+        SELECT *
+        FROM `tbl_mahasiswa` as a
+        WHERE a.`status_id` = 1
+        AND a.nim NOT IN (SELECT DISTINCT nomor_induk from tbl_pengguna as b WHERE b.`id_type` = 1 AND b.status_id = 1)
+        ";
+
+        if(isset($search)) {
+            $query.= " AND (nim LIKE '%".$search."%' OR nama LIKE '%".$search."%')";
+        }
+
+        if(isset($order)) {
+            $query.= " ORDER BY id ".$order;
+        }
+        if(isset($start) && isset($limit)) {
+            $query.= " LIMIT ".$limit." OFFSET ".$start;
+        }
+
+        try {
+            $data = $this->db->query($query)->result();
+            $total = $this->db->query($totalquery)->result();
+
+            return array('status' => 200, 'total' =>$total[0]->count, 'data' => $data);
+        } catch(Exception $err) {
+            return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
+        }
+    }
 }

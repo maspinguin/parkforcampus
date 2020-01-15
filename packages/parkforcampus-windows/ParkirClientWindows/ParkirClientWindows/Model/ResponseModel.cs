@@ -17,6 +17,8 @@ namespace ParkirClientWindows.Model
         public string nomor_induk { get; set; }
         public int id_type { get; set; }
 
+        
+
     }
  
 }

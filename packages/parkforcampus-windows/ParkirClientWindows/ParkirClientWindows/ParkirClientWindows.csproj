@@ -55,7 +55,31 @@
     <Compile Include="ArduinoHandler.cs" />
     <Compile Include="config.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="FormPengguna.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPengguna.Designer.cs">
+      <DependentUpon>FormPengguna.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAddMahasiswa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAddMahasiswa.Designer.cs">
+      <DependentUpon>FormAddMahasiswa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAddPegawai.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAddPegawai.Designer.cs">
+      <DependentUpon>FormAddPegawai.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,6 +92,7 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\ComboBoxItem.cs" />
     <Compile Include="Model\Parkir\ResponseParkir.cs" />
     <Compile Include="Model\Parkir\ResponseParkirDetail.cs" />
     <Compile Include="Model\Parkir\ResponseParkirList.cs" />
@@ -81,10 +106,21 @@
     <Compile Include="Model\Mahasiswa\ResponseMahasiswaList.cs" />
     <Compile Include="Model\Pegawai\ResponsePegawaiList.cs" />
     <Compile Include="Model\Pegawai\ResponsePegawaiDetail.cs" />
+    <Compile Include="Model\responseData.cs" />
     <Compile Include="Model\ResponseModel.cs" />
+    <Compile Include="Model\ResponseModelData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialPortHandler.cs" />
+    <EmbeddedResource Include="FormAddMahasiswa.resx">
+      <DependentUpon>FormAddMahasiswa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAddPegawai.resx">
+      <DependentUpon>FormAddPegawai.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPengguna.resx">
+      <DependentUpon>FormPengguna.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>

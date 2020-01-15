@@ -42,6 +42,8 @@
             this.startModePortalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.masukToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keluarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.portalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openPortalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.port2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectReconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,7 +132,6 @@
             this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
             this.labelNama = new System.Windows.Forms.Label();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.portalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
@@ -202,7 +203,8 @@
             this.pingToolStripMenuItem,
             this.doReadToolStripMenuItem,
             this.doWriteToolStripMenuItem,
-            this.startModePortalToolStripMenuItem});
+            this.startModePortalToolStripMenuItem,
+            this.openPortalToolStripMenuItem});
             this.port1ToolStripMenuItem.Name = "port1ToolStripMenuItem";
             this.port1ToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             this.port1ToolStripMenuItem.Text = "Port 1";
@@ -255,16 +257,30 @@
             // masukToolStripMenuItem
             // 
             this.masukToolStripMenuItem.Name = "masukToolStripMenuItem";
-            this.masukToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.masukToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.masukToolStripMenuItem.Text = "Masuk";
             this.masukToolStripMenuItem.Click += new System.EventHandler(this.masukToolStripMenuItem_Click);
             // 
             // keluarToolStripMenuItem
             // 
             this.keluarToolStripMenuItem.Name = "keluarToolStripMenuItem";
-            this.keluarToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.keluarToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.keluarToolStripMenuItem.Text = "Keluar";
             this.keluarToolStripMenuItem.Click += new System.EventHandler(this.keluarToolStripMenuItem_Click);
+            // 
+            // portalToolStripMenuItem
+            // 
+            this.portalToolStripMenuItem.Name = "portalToolStripMenuItem";
+            this.portalToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
+            this.portalToolStripMenuItem.Text = "Portal";
+            this.portalToolStripMenuItem.Click += new System.EventHandler(this.portalToolStripMenuItem_Click);
+            // 
+            // openPortalToolStripMenuItem
+            // 
+            this.openPortalToolStripMenuItem.Name = "openPortalToolStripMenuItem";
+            this.openPortalToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
+            this.openPortalToolStripMenuItem.Text = "Open Portal";
+            this.openPortalToolStripMenuItem.Click += new System.EventHandler(this.openPortalToolStripMenuItem_Click);
             // 
             // port2ToolStripMenuItem
             // 
@@ -642,6 +658,7 @@
             this.dataGridViewParkir.RowTemplate.Height = 24;
             this.dataGridViewParkir.Size = new System.Drawing.Size(1811, 295);
             this.dataGridViewParkir.TabIndex = 1;
+            this.dataGridViewParkir.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewParkir_CellContentClick);
             // 
             // flowLayoutPanel8
             // 
@@ -770,6 +787,7 @@
             this.buttonPengguna_add.TabIndex = 0;
             this.buttonPengguna_add.Text = "Tambah Data Pengguna";
             this.buttonPengguna_add.UseVisualStyleBackColor = true;
+            this.buttonPengguna_add.Click += new System.EventHandler(this.buttonPengguna_add_Click);
             // 
             // comboBoxPengguna_filter
             // 
@@ -888,6 +906,7 @@
             this.dataGridViewPengguna.Size = new System.Drawing.Size(1811, 342);
             this.dataGridViewPengguna.TabIndex = 1;
             this.dataGridViewPengguna.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPengguna_CellClick);
+            this.dataGridViewPengguna.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPengguna_CellContentClick);
             // 
             // tabPage3
             // 
@@ -941,6 +960,7 @@
             this.buttonPegawai_tambah.TabIndex = 0;
             this.buttonPegawai_tambah.Text = "Tambah Data Pegawai";
             this.buttonPegawai_tambah.UseVisualStyleBackColor = true;
+            this.buttonPegawai_tambah.Click += new System.EventHandler(this.buttonPegawai_tambah_Click);
             // 
             // label3
             // 
@@ -1038,10 +1058,10 @@
             this.dataGridViewPegawai.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewPegawai.Location = new System.Drawing.Point(3, 53);
             this.dataGridViewPegawai.Name = "dataGridViewPegawai";
-            this.dataGridViewPegawai.ReadOnly = true;
             this.dataGridViewPegawai.RowTemplate.Height = 24;
             this.dataGridViewPegawai.Size = new System.Drawing.Size(1811, 342);
             this.dataGridViewPegawai.TabIndex = 1;
+            this.dataGridViewPegawai.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPegawai_CellClick);
             // 
             // tabPage4
             // 
@@ -1095,6 +1115,7 @@
             this.buttonMahasiswa_tambah.TabIndex = 0;
             this.buttonMahasiswa_tambah.Text = "Tambah Data Mahasiswa";
             this.buttonMahasiswa_tambah.UseVisualStyleBackColor = true;
+            this.buttonMahasiswa_tambah.Click += new System.EventHandler(this.buttonMahasiswa_tambah_Click);
             // 
             // label7
             // 
@@ -1192,10 +1213,10 @@
             this.dataGridViewMahasiswa.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewMahasiswa.Location = new System.Drawing.Point(3, 53);
             this.dataGridViewMahasiswa.Name = "dataGridViewMahasiswa";
-            this.dataGridViewMahasiswa.ReadOnly = true;
             this.dataGridViewMahasiswa.RowTemplate.Height = 24;
             this.dataGridViewMahasiswa.Size = new System.Drawing.Size(1811, 342);
             this.dataGridViewMahasiswa.TabIndex = 1;
+            this.dataGridViewMahasiswa.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewMahasiswa_CellClick);
             // 
             // flowLayoutPanel10
             // 
@@ -1219,13 +1240,6 @@
             // serialPort1
             // 
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
-            // 
-            // portalToolStripMenuItem
-            // 
-            this.portalToolStripMenuItem.Name = "portalToolStripMenuItem";
-            this.portalToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.portalToolStripMenuItem.Text = "Portal";
-            this.portalToolStripMenuItem.Click += new System.EventHandler(this.portalToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -1384,5 +1398,6 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox textBoxLogApplication;
         private System.Windows.Forms.ToolStripMenuItem portalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openPortalToolStripMenuItem;
     }
 }

@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using ParkirClientWindows.Model;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -346,6 +347,7 @@ namespace ParkirClientWindows
 
         private void buttonPegawai_search_Click(object sender, EventArgs e)
         {
+            pegawaiStart = 0;
             pegawaiTotal = 0;
             pegawaiTotalPage = 0;
             pegawaiActivePage = 1;
@@ -506,15 +508,470 @@ namespace ParkirClientWindows
                 ArduinoHandler.write(Configuration.SERIALPORT1.serial, "writeCard;" + Configuration.KeyA + ";" + Configuration.KeyB + ";"+Helper.ASCIItoHex(no_kartu), textBoxArduino1, 1);
 
             }
+
+            if(e.ColumnIndex == 7)
+            {
+                string nim = dataGridViewPengguna.Rows[e.RowIndex].Cells[1].Value.ToString();
+                string tipe = dataGridViewPengguna.Rows[e.RowIndex].Cells[5].Value.ToString();
+                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan menghapus data?", "Hapus", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //MessageBox.Show(nim);
+                    deletePengguna(nim, tipe);
+                }
+            }
+
+            if (e.ColumnIndex == 8)
+            {
+                string nim = dataGridViewPengguna.Rows[e.RowIndex].Cells[1].Value.ToString();
+                string tipe = dataGridViewPengguna.Rows[e.RowIndex].Cells[5].Value.ToString();
+                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan mengubah data?", "Hapus", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //MessageBox.Show(nim);
+                    updatePengguna(nim, tipe,"1234");
+                }
+            }
         }
+
+        private void refreshDataPengguna()
+        {
+            penggunaStart = 0;
+            penggunaTotal = 0;
+            penggunaTotalPage = 0;
+            penggunaActivePage = 1;
+
+            this.getListPengguna();
+        }
+
+        private void refreshDataPegawai()
+        {
+            pegawaiStart = 0;
+            pegawaiTotal = 0;
+            pegawaiTotalPage = 0;
+            pegawaiActivePage = 1;
+
+            this.getListPegawai();
+        }
+
+        private void refreshDataMahasiswa()
+        {
+            mahasiswaStart = 0;
+            mahasiswaTotal = 0;
+            mahasiswaTotalPage = 0;
+            mahasiswaActivePage = 1;
+
+            this.getListMahasiswa();
+        }
+        private void deletePengguna(string ni, string tipe)
+        {
+            try
+            {
+                string path = "Apimobile/delete_pengguna";
+                RestRequest request = Configuration.getHttpConfig(path, false, "DELETE");
+                request.AddJsonBody(
+                    new { tipe = tipe, nomor_induk = ni }
+                    );
+                IRestResponse<Model.ResponseModelData> response2 = Configuration.CLIENT.Execute<Model.ResponseModelData>(request);
+                if (response2 != null)
+                {
+                    responseData data = response2.Data.data;
+                    //MessageBox.Show("res"+ data.message.ToString());
+                    int status = data.status;
+                    if (status == 200)
+                    {
+                        MessageBox.Show("Data pengguna Telah Dihapus.");
+                    }
+                    else
+                    {
+                        MessageBox.Show(data.message, "Error Status " + status);
+                    }
+
+                    refreshDataPengguna();
+
+
+                    //client.ExecuteAsync(request, response => {
+                    //    Debug.WriteLine(response.Content);
+                    //});
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
+
+            } catch(Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+           
+        }
+
+        private void deleteMahasiswa(string ni)
+        {
+            try
+            {
+                string path = "Apimobile/delete_mahasiswa";
+                RestRequest request = Configuration.getHttpConfig(path, false, "DELETE");
+                request.AddJsonBody(
+                    new { nim = ni }
+                    );
+                IRestResponse<Model.ResponseModelData> response2 = Configuration.CLIENT.Execute<Model.ResponseModelData>(request);
+                if (response2 != null)
+                {
+                    responseData data = response2.Data.data;
+                    //MessageBox.Show("res"+ data.message.ToString());
+                    int status = data.status;
+                    if (status == 200)
+                    {
+                        MessageBox.Show("Data mahasiswa Telah Dihapus.");
+                    }
+                    else
+                    {
+                        MessageBox.Show(data.message, "Error Status " + status);
+                    }
+
+                    refreshDataMahasiswa();
+
+
+                    //client.ExecuteAsync(request, response => {
+                    //    Debug.WriteLine(response.Content);
+                    //});
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+        }
+
+        private void deletePegawai(string ni)
+        {
+            try
+            {
+                string path = "Apimobile/delete_pegawai";
+                RestRequest request = Configuration.getHttpConfig(path, false, "DELETE");
+                request.AddJsonBody(
+                    new { nip = ni }
+                    );
+                IRestResponse<Model.ResponseModelData> response2 = Configuration.CLIENT.Execute<Model.ResponseModelData>(request);
+                if (response2 != null)
+                {
+                    responseData data = response2.Data.data;
+                    //MessageBox.Show("res"+ data.message.ToString());
+                    int status = data.status;
+                    if (status == 200)
+                    {
+                        MessageBox.Show("Data Pegawai Telah Dihapus.");
+                    }
+                    else
+                    {
+                        MessageBox.Show(data.message, "Error Status " + status);
+                    }
+
+                    refreshDataPegawai();
+
+
+                    //client.ExecuteAsync(request, response => {
+                    //    Debug.WriteLine(response.Content);
+                    //});
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+        }
+
+        private void updatePengguna(string ni, string tipe, string password)
+        {
+            try
+            {
+                string path = "Apimobile/update_pengguna";
+                RestRequest request = Configuration.getHttpConfig(path, false, "PUT");
+                request.AddJsonBody(
+                    new { tipe = tipe, nomor_induk = ni, password = password }
+                    );
+                IRestResponse<Model.ResponseModelData> response2 = Configuration.CLIENT.Execute<Model.ResponseModelData>(request);
+                if (response2 != null)
+                {
+                    responseData data = response2.Data.data;
+                    //MessageBox.Show("res"+ data.message.ToString());
+                    int status = data.status;
+                    if (status == 200)
+                    {
+                        MessageBox.Show("Data pengguna Telah Diganti.");
+                    }
+                    else
+                    {
+                        MessageBox.Show(data.message, "Error Status " + status);
+                    }
+
+                    refreshDataPengguna();
+
+
+                    //client.ExecuteAsync(request, response => {
+                    //    Debug.WriteLine(response.Content);
+                    //});
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        private void updateMahasiswa(string nim, string nama, string email, string alamat)
+        {
+            try
+            {
+                string path = "Apimobile/update_mahasiswa";
+                RestRequest request = Configuration.getHttpConfig(path, false, "PUT");
+                request.AddJsonBody(
+                    new { nim = nim, nama = nama, email = email, alamat = alamat }
+                    );
+                IRestResponse<Model.ResponseModelData> response2 = Configuration.CLIENT.Execute<Model.ResponseModelData>(request);
+                if (response2 != null)
+                {
+                    responseData data = response2.Data.data;
+                    //MessageBox.Show("res"+ data.message.ToString());
+                    int status = data.status;
+                    if (status == 200)
+                    {
+                        MessageBox.Show("Data Mahasiswa Telah Diganti.");
+                    }
+                    else
+                    {
+                        MessageBox.Show(data.message, "Error Status " + status);
+                    }
+
+                    refreshDataMahasiswa();
+
+
+                    //client.ExecuteAsync(request, response => {
+                    //    Debug.WriteLine(response.Content);
+                    //});
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        private void updatePegawai(string nip, string nama, string email, string alamat)
+        {
+            try
+            {
+                string path = "Apimobile/update_pegawai";
+                RestRequest request = Configuration.getHttpConfig(path, false, "PUT");
+                request.AddJsonBody(
+                    new { nip = nip, nama = nama, email = email, alamat = alamat }
+                    );
+                IRestResponse<Model.ResponseModelData> response2 = Configuration.CLIENT.Execute<Model.ResponseModelData>(request);
+                if (response2 != null)
+                {
+                    responseData data = response2.Data.data;
+                    //MessageBox.Show("res"+ data.message.ToString());
+                    int status = data.status;
+                    if (status == 200)
+                    {
+                        MessageBox.Show("Data Pegawai Telah Diganti.");
+                    }
+                    else
+                    {
+                        MessageBox.Show(data.message, "Error Status " + status);
+                    }
+
+                    refreshDataMahasiswa();
+
+
+                    //client.ExecuteAsync(request, response => {
+                    //    Debug.WriteLine(response.Content);
+                    //});
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
 
         private void portalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ArduinoHandler.write(Configuration.SERIALPORT1.serial, "startModePortal;", textBoxArduino1, 1);
         }
 
+        private void openPortalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArduinoHandler.write(Configuration.SERIALPORT1.serial, "openPortal;", textBoxArduino1, 1);
+        }
+
+        private void buttonPengguna_add_Click(object sender, EventArgs e)
+        {
+            FormPengguna a = new FormPengguna();
+          //  a.FormClosed += FormPenggunaClose;
+            a.FormClosing += FormPenggunaClosing;
+            a.ShowDialog();
+           
+        }
+
+        private void FormPenggunaClosing(Object sender, FormClosingEventArgs e)
+        {
+            refreshDataPengguna();
+        }
+
+        private void FormPenggunaClose(Object sender, FormClosedEventArgs e)
+        {
+            refreshDataPengguna();
+        }
+
+
+        private void buttonPegawai_tambah_Click(object sender, EventArgs e)
+        {
+            FormAddPegawai a = new FormAddPegawai();
+           // a.FormClosed += FormPegawaiClose;
+            a.FormClosing += FormPegawaiClosing;
+            a.ShowDialog();
+        }
+
+        private void FormPegawaiClose(Object sender, FormClosedEventArgs e)
+        {
+            refreshDataPegawai();
+        }
+
+        private void FormPegawaiClosing(Object sender, FormClosingEventArgs e)
+        {
+            refreshDataPegawai();
+        }
+
+
+        private void buttonMahasiswa_tambah_Click(object sender, EventArgs e)
+        {
+            FormAddMahasiswa a = new FormAddMahasiswa();
+           // a.FormClosed += FormMahasiswaClose;
+            a.FormClosing += FormMahasiswaClosing;
+            a.ShowDialog();
+        }
+
+        private void FormMahasiswaClose(Object sender, FormClosedEventArgs e)
+        {
+            refreshDataMahasiswa();
+        }
+
+        private void FormMahasiswaClosing(Object sender, FormClosingEventArgs e)
+        {
+            refreshDataMahasiswa();
+        }
+
+
+        private void dataGridViewPengguna_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataGridViewParkir_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataGridViewMahasiswa_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 6)
+            {
+                string nim = dataGridViewMahasiswa.Rows[e.RowIndex].Cells[1].Value.ToString();
+               
+                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan menghapus data " + nim + "?", "Hapus", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //MessageBox.Show(nim);
+                    deleteMahasiswa(nim);
+                }
+            }
+
+            if (e.ColumnIndex == 5)
+            {
+                string nim = dataGridViewMahasiswa.Rows[e.RowIndex].Cells[1].Value.ToString();
+                string nama = dataGridViewMahasiswa.Rows[e.RowIndex].Cells[2].Value.ToString();
+                string alamat = dataGridViewMahasiswa.Rows[e.RowIndex].Cells[3].Value.ToString();
+                string email = dataGridViewMahasiswa.Rows[e.RowIndex].Cells[4].Value.ToString();
+
+                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan mengganti data "+nim+"?", "Hapus", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //MessageBox.Show(nim);
+                    updateMahasiswa(nim, nama, email, alamat);
+                }
+            }
+        }
+
+        private void dataGridViewPegawai_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 6)
+            {
+                string nip = dataGridViewPegawai.Rows[e.RowIndex].Cells[1].Value.ToString();
+
+                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan menghapus data " + nip + "?", "Hapus", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //MessageBox.Show(nim);
+                    deletePegawai(nip);
+                }
+            }
+
+            if (e.ColumnIndex == 5)
+            {
+                string nip = dataGridViewPegawai.Rows[e.RowIndex].Cells[1].Value.ToString();
+                string nama = dataGridViewPegawai.Rows[e.RowIndex].Cells[2].Value.ToString();
+                string alamat = dataGridViewPegawai.Rows[e.RowIndex].Cells[3].Value.ToString();
+                string email = dataGridViewPegawai.Rows[e.RowIndex].Cells[4].Value.ToString();
+
+                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan mengganti data " + nip + "?", "Hapus", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //MessageBox.Show(nim);
+                    updatePegawai(nip, nama, email, alamat);
+                }
+            }
+
+        }
+
         private void buttonPengguna_search_Click(object sender, EventArgs e)
         {
+            penggunaStart = 0;
             penggunaTotal = 0;
             penggunaTotalPage = 0;
             penggunaActivePage = 1;
@@ -554,6 +1011,7 @@ namespace ParkirClientWindows
 
         private void buttonMahasiswa_search_Click(object sender, EventArgs e)
         {
+            mahasiswaStart = 0;
             mahasiswaTotal = 0;
             mahasiswaTotalPage = 0;
             mahasiswaActivePage = 1;
@@ -755,6 +1213,8 @@ namespace ParkirClientWindows
             dataGridViewPegawai.Columns[2].HeaderText = "Nama";
             dataGridViewPegawai.Columns[3].HeaderText = "Alamat";
             dataGridViewPegawai.Columns[4].HeaderText = "Email";
+            dataGridViewPegawai.Columns[0].ReadOnly = true;
+            dataGridViewPegawai.Columns[1].ReadOnly = true;
             for (int i = 0; i < listPegawai.Count; i++)
             {
                 dataGridViewPegawai.Rows.Add(
@@ -764,6 +1224,23 @@ namespace ParkirClientWindows
                     listPegawai[i].alamat,
                     listPegawai[i].email
                     );
+            }
+
+            
+
+            DataGridViewButtonColumn button = new DataGridViewButtonColumn();
+            {
+                button.HeaderText = "Aksi";
+                button.Text = "Ubah";
+                button.UseColumnTextForButtonValue = true; //dont forget this line
+                this.dataGridViewPegawai.Columns.Add(button);
+            }
+            DataGridViewButtonColumn delete = new DataGridViewButtonColumn();
+            {
+
+                delete.Text = "Hapus";
+                delete.UseColumnTextForButtonValue = true; //dont forget this line
+                this.dataGridViewPegawai.Columns.Add(delete);
             }
         }
 
@@ -778,6 +1255,9 @@ namespace ParkirClientWindows
             dataGridViewMahasiswa.Columns[2].HeaderText = "Nama";
             dataGridViewMahasiswa.Columns[3].HeaderText = "Alamat";
             dataGridViewMahasiswa.Columns[4].HeaderText = "Email";
+
+            dataGridViewMahasiswa.Columns[0].ReadOnly = true;
+            dataGridViewMahasiswa.Columns[1].ReadOnly = true;
             for (int i = 0; i < listMahasiswa.Count; i++)
             {
                 dataGridViewMahasiswa.Rows.Add(
@@ -787,6 +1267,21 @@ namespace ParkirClientWindows
                     listMahasiswa[i].alamat,
                     listMahasiswa[i].email
                     );
+            }
+
+            DataGridViewButtonColumn button = new DataGridViewButtonColumn();
+            {
+                button.HeaderText = "Aksi";
+                button.Text = "Ubah";
+                button.UseColumnTextForButtonValue = true; //dont forget this line
+                this.dataGridViewMahasiswa.Columns.Add(button);
+            }
+            DataGridViewButtonColumn delete = new DataGridViewButtonColumn();
+            {
+
+                delete.Text = "Hapus";
+                delete.UseColumnTextForButtonValue = true; //dont forget this line
+                this.dataGridViewMahasiswa.Columns.Add(delete);
             }
         }
 
@@ -836,6 +1331,22 @@ namespace ParkirClientWindows
                 button.UseColumnTextForButtonValue = true; //dont forget this line
                 this.dataGridViewPengguna.Columns.Add(button);
             }
+
+            DataGridViewButtonColumn deleteButton = new DataGridViewButtonColumn();
+            {
+                deleteButton.Text = "Hapus";
+                deleteButton.UseColumnTextForButtonValue = true; //dont forget this line
+                this.dataGridViewPengguna.Columns.Add(deleteButton);
+            }
+
+            /*
+            DataGridViewButtonColumn editButton = new DataGridViewButtonColumn();
+            {
+                editButton.Text = "Ubah";
+                editButton.UseColumnTextForButtonValue = true; //dont forget this line
+                this.dataGridViewPengguna.Columns.Add(editButton);
+            }
+            */
         }
 
         private void setTableParkir()
