@@ -660,6 +660,45 @@ class Api_model extends CI_Model {
 
     }
 
+    public function jam_ramai($date= null, $jenis=null) {
+      $query = "SELECT count(*)as jumlah, waktu as hour FROM `tbl_parkir` where waktu>= '".$date." 00:00' and waktu <= '".$date." 23:59'";
+
+      if(isset($jenis)){
+        $query.= " AND jenis_parkir = '".$jenis."'";
+      }
+
+      $query.= "  GROUP BY hour(waktu) order by jumlah desc limit 1 ";
+
+      try {
+        $data = $this->db->query($query)->result();
+
+        if(isset($data) && count($data) > 0) {
+            return $data[0]->hour;
+        }
+        return "00:00";
+      } catch(Exception $err) {
+          return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
+      }
+    }
+
+    public function list_count_parkir_by_date_hour($date= null, $jenis=null) {
+      $query = "SELECT count(*)as jumlah, waktu as hour FROM `tbl_parkir` where waktu>= '".$date." 00:00' and waktu <= '".$date." 23:59'";
+
+      if(isset($jenis)){
+        $query.= " AND jenis_parkir = '".$jenis."'";
+      }
+
+      $query.= "  GROUP BY hour(waktu) order by hour asc";
+
+      try {
+        $data = $this->db->query($query)->result();
+
+        return array('status' => 200, 'data' => $data);
+      } catch(Exception $err) {
+          return array('status' => 400, 'message' => $err, 'ci_db_message' => $this->db->_error_message());
+      }
+    }
+
     public function list_parkir($jenis= null,$start=null, $limit=null, $order='asc', $search = null, $date_start = null, $date_end = null) {
 
         $totalquery = "select count(*) as count from tbl_parkir where status_id != 0";

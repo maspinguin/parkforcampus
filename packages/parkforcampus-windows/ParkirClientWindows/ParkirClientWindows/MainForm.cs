@@ -21,12 +21,14 @@ namespace ParkirClientWindows
         int pegawaiTotalPage = 0, mahasiswaTotalPage = 0, penggunaTotalPage = 0, parkirTotalPage = 0;
         int pegawaiActivePage = 1, mahasiswaActivePage = 1, penggunaActivePage = 1, parkirActivePage =1;
         int pegawaiStart = 0, mahasiswaStart= 0, penggunaStart = 0, parkirStart = 0;
-        int pegawaiTotal = 0, mahasiswaTotal = 0, penggunaTotal = 0, parkirTotal = 0;
+        int pegawaiTotal = 0, mahasiswaTotal = 0, penggunaTotal = 0, parkirTotal = 0, rekapParkirTotal = 0;
         string pegawaiSearch = "", mahasiswaSearch ="", penggunaSearch = "", parkirSearch = "";
         List<Model.ResponsePegawaiDetail> listPegawai;
         List<Model.ResponseMahasiswaDetail> listMahasiswa;
         List<Model.ResponsePenggunaDetail> listPengguna;
         List<Model.ResponseParkirDetail> listParkir;
+        List<Model.ResponseParkirDetail> listRekapParkir;
+        List<Model.ResponseRekapParkirDetail> listCountRekapParkir;
         private ArduinoHandler arduinoHandler1;
 
         public MainForm()
@@ -45,6 +47,7 @@ namespace ParkirClientWindows
             labelServerAddress.Text = Configuration.ENDPOINT;
             comboBoxPengguna_filter.SelectedIndex = 0;
             comboBoxParkir_filter.SelectedIndex = 0;
+            comboBox1.SelectedIndex = 0;
             labelNama.Text = "Selamat datang " + Configuration.LOGINNAMA + " ( NIP / ID: " + Configuration.LOGINNIP + ")";
 
             Configuration.setSerialPortSetting();
@@ -55,6 +58,60 @@ namespace ParkirClientWindows
             arduinoHandler1.OpenPort2(textBoxArduino2);
         }
 
+        private void getListCountByHour()
+        {
+            string path = "Apimobile/list_count_parkir_by_date_hour";
+            RestRequest request = Configuration.getHttpConfig(path);
+            string tipe = "";
+            if (comboBox1.SelectedItem.ToString() != "semua")
+            {
+                tipe = comboBox1.SelectedItem.ToString();
+            }
+            request.AddJsonBody(
+                new
+                {
+                    date = dateTimePicker3.Value.ToString("yyyy-MM-dd"),
+                    jenis = tipe
+                    
+                }
+            );
+            IRestResponse<Model.ResponseRekapParkir> response2 = Configuration.CLIENT.Execute<Model.ResponseRekapParkir>(request);
+            if (response2 != null)
+            {
+                if (response2.Data.data == null)
+                {
+
+                    MessageBox.Show(response2.Data.message, "Error Status " + response2.Data.status);
+                    pegawaiTotal = 0;
+
+
+                    if (response2.Data.status == 401)
+                    {
+                        this.Hide();
+                        LoginForm a = new LoginForm();
+                        a.ShowDialog();
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine(response2.Data.data[0].data.Count);
+                    listCountRekapParkir = response2.Data.data[0].data;
+                    if(response2.Data.jam_ramai != null)
+                    {
+
+                        var dt = Convert.ToDateTime(response2.Data.jam_ramai);
+                        label24.Text = dt.Hour + ":00";
+                    }
+
+                    this.setTableCountRekapParkir();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Network/ Server Error!");
+                Application.Exit();
+            }
+        }
         public void getListPegawai()
         {
             string path = "Apimobile/list_pegawai";
@@ -205,6 +262,126 @@ namespace ParkirClientWindows
             {
                 MessageBox.Show("Network/ Server Error!");
                 Application.Exit();
+            }
+        }
+
+        public void getListRekapParkir()
+        {
+            if (this.comboBox1.InvokeRequired)
+            {
+                string path = "Apimobile/list_count_parkir_by_date_hour";
+                RestRequest request = Configuration.getHttpConfig(path);
+                string jenis = "";
+                comboBox1.Invoke((MethodInvoker)delegate
+                {
+                    if (comboBox1.SelectedItem.ToString() != "semua")
+                    {
+                        jenis = comboBox1.SelectedItem.ToString();
+                    }
+                });
+
+                request.AddJsonBody(
+                    new
+                    {
+                        orderBy = "desc",
+                        jenis = jenis,
+                        dateStart = dateTimePicker3.Value.ToString("yyyy-MM-dd 00:00"),
+                        dateEnd = dateTimePicker3.Value.ToString("yyyy-MM-dd 23:59")
+                    }
+                );
+                IRestResponse<Model.ResponseParkir> response2 = Configuration.CLIENT.Execute<Model.ResponseParkir>(request);
+                if (response2 != null)
+                {
+
+
+                    if (response2.Data.data == null)
+                    {
+
+                        MessageBox.Show(response2.Data.message, "Error Status " + response2.Data.status);
+                        parkirTotal = 0;
+
+
+                        if (response2.Data.status == 401)
+                        {
+                            this.Hide();
+                            LoginForm a = new LoginForm();
+                            a.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine(response2.Data.data[0].data.Count);
+                        listRekapParkir = response2.Data.data[0].data;
+
+                        rekapParkirTotal = response2.Data.data[0].total;
+
+                        setTableRekapParkir();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
+
+
+            }
+            else
+            {
+                string path = "Apimobile/list_parkir";
+                RestRequest request = Configuration.getHttpConfig(path);
+                string jenis = "";
+                if (comboBox1.SelectedItem.ToString() != "semua")
+                {
+                    jenis = comboBox1.SelectedItem.ToString();
+                }
+                request.AddJsonBody(
+                    new
+                    {
+                        orderBy = "desc",
+                        jenis = jenis,
+                        dateStart = dateTimePicker3.Value.ToString("yyyy-MM-dd 00:00"),
+                        dateEnd = dateTimePicker3.Value.ToString("yyyy-MM-dd 23:59")
+
+
+                    }
+                );
+                IRestResponse<Model.ResponseParkir> response2 = Configuration.CLIENT.Execute<Model.ResponseParkir>(request);
+                if (response2 != null)
+                {
+
+
+                    if (response2.Data.data == null)
+                    {
+
+                        MessageBox.Show(response2.Data.message, "Error Status " + response2.Data.status);
+                        parkirTotal = 0;
+
+
+                        if (response2.Data.status == 401)
+                        {
+                            this.Hide();
+                            LoginForm a = new LoginForm();
+                            a.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine(response2.Data.data[0].data.Count);
+                        listRekapParkir = response2.Data.data[0].data;
+
+                        rekapParkirTotal = response2.Data.data[0].total;
+
+                        setTableRekapParkir();
+                        // this.setPaginationParkir();
+                        //this.setTableParkir();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Network/ Server Error!");
+                    Application.Exit();
+                }
             }
         }
 
@@ -969,6 +1146,18 @@ namespace ParkirClientWindows
 
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            getListRekapParkir();
+            getListCountByHour();
+            label23.Text = rekapParkirTotal.ToString();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void buttonPengguna_search_Click(object sender, EventArgs e)
         {
             penggunaStart = 0;
@@ -1398,6 +1587,102 @@ namespace ParkirClientWindows
                 }
             }
             
+        }
+
+        private void setTableCountRekapParkir()
+        {
+            if (dataGridView2.InvokeRequired)
+            {
+                dataGridView2.Invoke((MethodInvoker)delegate
+                {
+                    dataGridView2.Rows.Clear();
+                    dataGridView2.Refresh();
+                    dataGridView2.DataSource = null;
+                    dataGridView2.ColumnCount = 2;
+                    dataGridView2.Columns[1].Width = 200;
+                    dataGridView2.Columns[0].HeaderText = "Jam";
+                    dataGridView2.Columns[1].HeaderText = "Jumlah";
+                    for (int i = 0; i < listCountRekapParkir.Count; i++)
+                    {
+
+                        var dt = Convert.ToDateTime(listCountRekapParkir[i].hour);
+                        dataGridView2.Rows.Add(
+                            dt.Hour + ":00",
+                            listCountRekapParkir[i].jumlah
+                            );
+                    }
+                });
+            }
+            else
+            {
+                dataGridView2.Rows.Clear();
+                dataGridView2.Refresh();
+                dataGridView2.DataSource = null;
+                dataGridView2.ColumnCount = 2;
+                dataGridView2.Columns[1].Width = 200;
+                dataGridView2.Columns[0].HeaderText = "Jam";
+                dataGridView2.Columns[1].HeaderText = "Jumlah";
+                for (int i = 0; i < listCountRekapParkir.Count; i++)
+                {
+                    var dt = Convert.ToDateTime(listCountRekapParkir[i].hour);
+                    dataGridView2.Rows.Add(
+                         dt.Hour + ":00",
+                        listCountRekapParkir[i].jumlah
+                        );
+                }
+            }
+
+        }
+
+        private void setTableRekapParkir()
+        {
+            if (dataGridView1.InvokeRequired)
+            {
+                dataGridView1.Invoke((MethodInvoker)delegate
+                {
+                    dataGridView1.Rows.Clear();
+                    dataGridView1.Refresh();
+                    dataGridView1.DataSource = null;
+                    dataGridView1.ColumnCount = 4;
+                    dataGridView1.Columns[2].Width = 200;
+                    dataGridView1.Columns[0].HeaderText = "ID";
+                    dataGridView1.Columns[1].HeaderText = "Nomor Induk";
+                    dataGridView1.Columns[2].HeaderText = "Waktu";
+                    dataGridView1.Columns[3].HeaderText = "Jenis Parkir";
+                    for (int i = 0; i < listRekapParkir.Count; i++)
+                    {
+
+                        dataGridView1.Rows.Add(
+                            listRekapParkir[i].id,
+                            listRekapParkir[i].nomor_induk,
+                            listRekapParkir[i].waktu,
+                            listRekapParkir[i].jenis_parkir
+                            );
+                    }
+                });
+            }
+            else
+            {
+                dataGridView1.Rows.Clear();
+                dataGridView1.Refresh();
+                dataGridView1.DataSource = null;
+                dataGridView1.ColumnCount = 4;
+                dataGridView1.Columns[2].Width = 200;
+                dataGridView1.Columns[0].HeaderText = "ID";
+                dataGridView1.Columns[1].HeaderText = "Nomor Induk";
+                dataGridView1.Columns[2].HeaderText = "Waktu";
+                dataGridView1.Columns[3].HeaderText = "Jenis Parkir";
+                for (int i = 0; i < listRekapParkir.Count; i++)
+                {
+
+                    dataGridView1.Rows.Add(
+                        listRekapParkir[i].id,
+                        listRekapParkir[i].nomor_induk,
+                        listRekapParkir[i].waktu,
+                        listRekapParkir[i].jenis_parkir
+                        );
+                }
+            }
         }
 
         private void buttonPegawai_next_Click(object sender, EventArgs e)

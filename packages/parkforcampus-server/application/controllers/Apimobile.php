@@ -739,6 +739,38 @@ class Apimobile extends CI_Controller {
         }
     }
 
+		public function list_count_parkir_by_date_hour() {
+			$method = $_SERVER['REQUEST_METHOD'];
+			if($method != 'POST'){
+					json_output(400,array('status' => 400,'message' => 'Bad request.'));
+			} else {
+					$check_auth_client = $this->Api_model->check_auth_client();
+					if($check_auth_client == true){
+							$response = $this->Api_model->auth();
+							if($response['status'] == 200){
+									$params = json_decode(file_get_contents('php://input'), true);
+
+									//get from input post
+									//				$params = $_REQUEST;
+
+									$jenis = null;
+									$date = null;
+									if(isset($params['date'])) {
+											$date = $params['date'];
+									}
+
+									if(isset($params['jenis'])&& $params['jenis']!="")  {
+											$jenis = $params['jenis'];
+									}
+									$resp = array(
+										'jam_ramai' => $this->Api_model->jam_ramai($date,$jenis),
+										'data' => $this->Api_model->list_count_parkir_by_date_hour($date,$jenis)
+									);
+									json_output($resp['data']['status'], $resp);
+							}
+					}
+			}
+		}
 		public function list_mahasiswa_non_pengguna() {
         $method = $_SERVER['REQUEST_METHOD'];
         if($method != 'POST'){
