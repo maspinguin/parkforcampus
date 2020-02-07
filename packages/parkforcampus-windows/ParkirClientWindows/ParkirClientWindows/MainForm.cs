@@ -702,11 +702,12 @@ namespace ParkirClientWindows
             {
                 string nim = dataGridViewPengguna.Rows[e.RowIndex].Cells[1].Value.ToString();
                 string tipe = dataGridViewPengguna.Rows[e.RowIndex].Cells[5].Value.ToString();
-                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan mengubah data?", "Hapus", MessageBoxButtons.YesNo);
+                string no_kartu = dataGridViewPengguna.Rows[e.RowIndex].Cells[4].Value.ToString();
+                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan mengubah data?", "Ubah", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
                     //MessageBox.Show(nim);
-                    updatePengguna(nim, tipe,"1234");
+                    updatePengguna(nim, tipe, no_kartu);
                 }
             }
         }
@@ -874,28 +875,41 @@ namespace ParkirClientWindows
 
         }
 
-        private void updatePengguna(string ni, string tipe, string password)
+        private void updatePengguna(string ni, string tipe, string no_kartu)
         {
             try
             {
                 string path = "Apimobile/update_pengguna";
                 RestRequest request = Configuration.getHttpConfig(path, false, "PUT");
                 request.AddJsonBody(
-                    new { tipe = tipe, nomor_induk = ni, password = password }
+                    new { tipe = tipe, nomor_induk = ni, no_kartu = no_kartu }
                     );
                 IRestResponse<Model.ResponseModelData> response2 = Configuration.CLIENT.Execute<Model.ResponseModelData>(request);
                 if (response2 != null)
                 {
-                    responseData data = response2.Data.data;
+
                     //MessageBox.Show("res"+ data.message.ToString());
-                    int status = data.status;
-                    if (status == 200)
+                    responseData data = null;
+                    if (response2.Data.data != null)
                     {
-                        MessageBox.Show("Data pengguna Telah Diganti.");
+                        data = response2.Data.data;
+                        int status = data.status;
+                        if (status == 200)
+                        {
+                            MessageBox.Show("Data pengguna Telah Diganti.");
+                        }
+                        else
+                        {
+                            MessageBox.Show(data.message, "Error Status " + status);
+                        }
+                        
                     }
                     else
                     {
-                        MessageBox.Show(data.message, "Error Status " + status);
+                        if(response2.Data.status == 500)
+                        {
+                            MessageBox.Show("Internal Server Error. Error duplicate card! ", "Error Status " + response2.Data.status);
+                        }
                     }
 
                     refreshDataPengguna();
@@ -1136,7 +1150,7 @@ namespace ParkirClientWindows
                 string alamat = dataGridViewPegawai.Rows[e.RowIndex].Cells[3].Value.ToString();
                 string email = dataGridViewPegawai.Rows[e.RowIndex].Cells[4].Value.ToString();
 
-                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan mengganti data " + nip + "?", "Hapus", MessageBoxButtons.YesNo);
+                DialogResult dialogResult = MessageBox.Show("Apakah anda yakin akan mengubah data " + nip + "?", "Ubah", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
                     //MessageBox.Show(nim);
@@ -1486,6 +1500,13 @@ namespace ParkirClientWindows
             dataGridViewPengguna.Columns[3].HeaderText = "Alamat";
             dataGridViewPengguna.Columns[4].HeaderText = "No Kartu";
             dataGridViewPengguna.Columns[5].HeaderText = "Type";
+
+            dataGridViewPengguna.Columns[0].ReadOnly = true;
+            dataGridViewPengguna.Columns[1].ReadOnly = true;
+            dataGridViewPengguna.Columns[2].ReadOnly = true;
+            dataGridViewPengguna.Columns[3].ReadOnly = true;
+            dataGridViewPengguna.Columns[5].ReadOnly = true;
+
             for (int i = 0; i < listPengguna.Count; i++)
             {
                 string tipe = "";
@@ -1528,14 +1549,13 @@ namespace ParkirClientWindows
                 this.dataGridViewPengguna.Columns.Add(deleteButton);
             }
 
-            /*
+           
             DataGridViewButtonColumn editButton = new DataGridViewButtonColumn();
             {
                 editButton.Text = "Ubah";
                 editButton.UseColumnTextForButtonValue = true; //dont forget this line
                 this.dataGridViewPengguna.Columns.Add(editButton);
             }
-            */
         }
 
         private void setTableParkir()

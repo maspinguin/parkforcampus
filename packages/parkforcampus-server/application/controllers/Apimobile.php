@@ -515,7 +515,8 @@ class Apimobile extends CI_Controller {
 
                     $nomor_induk = null ;
                     $tipe = null ;
-                    $password = null;
+                    // $password = null;s
+										$no_kartu = null;
 
                     if(!isset($params['nomor_induk']) || $params['nomor_induk'] == "") {
                         return json_output(203,array('status' =>203 , 'message'=> 'nomor_induk tidak ada' ));
@@ -523,23 +524,30 @@ class Apimobile extends CI_Controller {
                         $nomor_induk = $params['nomor_induk'];
                     }
 
+										if(!isset($params['no_kartu']) || $params['no_kartu'] == "") {
+												return json_output(203,array('status' =>203 , 'message'=> 'no_kartu tidak ada' ));
+										} else {
+												$no_kartu = $params['no_kartu'];
+										}
+
                     if(!isset($params['tipe']) || $params['tipe'] == "") {
                         return json_output(203,array('status' =>203 , 'message'=> 'tipe tidak ada' ));
                     } else {
                         $tipe = $params['tipe'];
                     }
 
-                    if(!isset($params['password']) || $params['password'] == "") {
-                        return json_output(203,array('status' =>203 , 'message'=> 'password tidak ada' ));
-                    } else {
-                        $password = $params['password'];
-                    }
+                    // if(!isset($params['password']) || $params['password'] == "") {
+                    //     return json_output(203,array('status' =>203 , 'message'=> 'password tidak ada' ));
+                    // } else {
+                    //     $password = $params['password'];
+                    // }
 
 
                     $newData = array(
                         'nomor_induk' => $nomor_induk,
-                        'password' => $password,
-                        'tipe' => $tipe
+                        // 'password' => $password,
+                        'tipe' => $tipe,
+												'no_kartu' => $no_kartu
                     );
 
                     $resp = array('data' => $this->Api_model->update_pengguna($newData));

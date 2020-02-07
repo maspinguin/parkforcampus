@@ -132,20 +132,20 @@
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
             this.button1 = new System.Windows.Forms.Button();
             this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
             this.labelNama = new System.Windows.Forms.Label();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.label22 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.label26 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
@@ -174,9 +174,9 @@
             this.tabPage5.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage6.SuspendLayout();
-            this.flowLayoutPanel10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.flowLayoutPanel10.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -594,7 +594,7 @@
             "semua",
             "masuk",
             "keluar"});
-            this.comboBoxParkir_filter.Location = new System.Drawing.Point(3, 7);
+            this.comboBoxParkir_filter.Location = new System.Drawing.Point(3, 8);
             this.comboBoxParkir_filter.Name = "comboBoxParkir_filter";
             this.comboBoxParkir_filter.Size = new System.Drawing.Size(121, 24);
             this.comboBoxParkir_filter.TabIndex = 10;
@@ -819,7 +819,7 @@
             "Pegawai",
             "Satpam",
             "Admin"});
-            this.comboBoxPengguna_filter.Location = new System.Drawing.Point(195, 8);
+            this.comboBoxPengguna_filter.Location = new System.Drawing.Point(195, 7);
             this.comboBoxPengguna_filter.Name = "comboBoxPengguna_filter";
             this.comboBoxPengguna_filter.Size = new System.Drawing.Size(121, 24);
             this.comboBoxPengguna_filter.TabIndex = 10;
@@ -921,7 +921,6 @@
             this.dataGridViewPengguna.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewPengguna.Location = new System.Drawing.Point(3, 53);
             this.dataGridViewPengguna.Name = "dataGridViewPengguna";
-            this.dataGridViewPengguna.ReadOnly = true;
             this.dataGridViewPengguna.RowTemplate.Height = 24;
             this.dataGridViewPengguna.Size = new System.Drawing.Size(1811, 342);
             this.dataGridViewPengguna.TabIndex = 1;
@@ -1280,6 +1279,84 @@
             this.tabPage6.Text = "Harian";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "semua",
+            "masuk",
+            "keluar"});
+            this.comboBox1.Location = new System.Drawing.Point(25, 91);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 24);
+            this.comboBox1.TabIndex = 13;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(25, 71);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(36, 17);
+            this.label26.TabIndex = 12;
+            this.label26.Text = "Tipe";
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(1056, 133);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.RowTemplate.Height = 24;
+            this.dataGridView2.Size = new System.Drawing.Size(747, 230);
+            this.dataGridView2.TabIndex = 8;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(25, 133);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowTemplate.Height = 24;
+            this.dataGridView1.Size = new System.Drawing.Size(1006, 230);
+            this.dataGridView1.TabIndex = 7;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label24.Location = new System.Drawing.Point(521, 33);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(55, 24);
+            this.label24.TabIndex = 6;
+            this.label24.Text = "00:00";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(501, 16);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(75, 17);
+            this.label25.TabIndex = 5;
+            this.label25.Text = "Jam Padat";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Location = new System.Drawing.Point(399, 33);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(20, 24);
+            this.label23.TabIndex = 4;
+            this.label23.Text = "0";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(360, 16);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(89, 17);
+            this.label22.TabIndex = 3;
+            this.label22.Text = "Jumlah Total";
+            // 
             // label21
             // 
             this.label21.AutoSize = true;
@@ -1328,84 +1405,6 @@
             // serialPort1
             // 
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(360, 16);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(89, 17);
-            this.label22.TabIndex = 3;
-            this.label22.Text = "Jumlah Total";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(399, 33);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(20, 24);
-            this.label23.TabIndex = 4;
-            this.label23.Text = "0";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(521, 33);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(55, 24);
-            this.label24.TabIndex = 6;
-            this.label24.Text = "00:00";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(501, 16);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(75, 17);
-            this.label25.TabIndex = 5;
-            this.label25.Text = "Jam Padat";
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(25, 133);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(1006, 230);
-            this.dataGridView1.TabIndex = 7;
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(1056, 133);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(747, 230);
-            this.dataGridView2.TabIndex = 8;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(25, 71);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(36, 17);
-            this.label26.TabIndex = 12;
-            this.label26.Text = "Tipe";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "semua",
-            "masuk",
-            "keluar"});
-            this.comboBox1.Location = new System.Drawing.Point(25, 91);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 24);
-            this.comboBox1.TabIndex = 13;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // MainForm
             // 
@@ -1457,10 +1456,10 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.flowLayoutPanel10.ResumeLayout(false);
             this.flowLayoutPanel10.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

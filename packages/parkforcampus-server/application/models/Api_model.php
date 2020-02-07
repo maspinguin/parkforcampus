@@ -496,9 +496,9 @@ class Api_model extends CI_Model {
             } else {
                 $newdata = new StdClass();
                 $newdata->nomor_induk = $data['nomor_induk'];
-                $newdata->password = md5($data['password']);
+                // $newdata->password = md5($data['password']);
                 $newdata->id_type = $tipe;
-                $newdata->no_kartu = $data['nomor_induk'];
+                $newdata->no_kartu = $data['no_kartu'];
                 $newdata->status_id = 1;
                 $newdata = $this->crud_info_std($newdata, "update");
                 $this->db->where('nomor_induk',$newdata->nomor_induk)->where('status_id', 1)->update('tbl_pengguna', $newdata);
@@ -513,35 +513,42 @@ class Api_model extends CI_Model {
             ->where('status_id', 1)
             ->get()->row();
 
-        if($q == "") {
-            return array('status' => 400, 'message' => 'user not exist!');
-        } else {
-            $gettipe  = $this->db->select('*')->from('tbl_type_pengguna')->where('keterangan', $data['tipe'])
-                ->where('status_id', 1)
-                ->get()->row();
+        $newdata = new StdClass();
+        $newdata->nomor_induk = $data['nomor_induk'];
+        $newdata->status_id = 0;
+        $newdata = $this->crud_info_std($newdata, "delete");
+        $this->db->where('nomor_induk',$newdata->nomor_induk)->where('status_id', 1)->update('tbl_pengguna', $newdata);
+        return array('status'=> 200, 'data'=> 'succesfully delete');
 
-            $tipe = $gettipe->id;
-            if($tipe == 1) {
-                $datauser = $this->db->select('*')->from('tbl_mahasiswa')->where('nim', $data['nomor_induk'])->where('status_id', 1)
-                    ->get()->row();
-            } else if($tipe == 2 || $tipe == 3 || $tipe == 4) {
-                $datauser= $this->db->select('*')->from('tbl_pegawai')->where('nip', $data['nomor_induk'])->where('status_id', 1)
-                    ->get()->row();
-            } else {
-                return array('status' => 400, 'message' => 'invalid user_type!');
-            }
-
-            if($datauser == "" || $datauser == null) {
-                return array('status'=> 400, 'message' => 'data with field \'nomor_induk\' = '.$data['nomor_induk'].' not found.');
-            } else {
-                $newdata = new StdClass();
-                $newdata->nomor_induk = $data['nomor_induk'];
-                $newdata->status_id = 0;
-                $newdata = $this->crud_info_std($newdata, "delete");
-                $this->db->where('nomor_induk',$newdata->nomor_induk)->where('status_id', 1)->update('tbl_pengguna', $newdata);
-                return array('status'=> 200, 'data'=> 'succesfully delete');
-            }
-        }
+        // if($q == "") {
+        //     return array('status' => 400, 'message' => 'user not exist!');
+        // } else {
+        //     $gettipe  = $this->db->select('*')->from('tbl_type_pengguna')->where('keterangan', $data['tipe'])
+        //         ->where('status_id', 1)
+        //         ->get()->row();
+        //
+        //     $tipe = $gettipe->id;
+        //     if($tipe == 1) {
+        //         $datauser = $this->db->select('*')->from('tbl_mahasiswa')->where('nim', $data['nomor_induk'])->where('status_id', 1)
+        //             ->get()->row();
+        //     } else if($tipe == 2 || $tipe == 3 || $tipe == 4) {
+        //         $datauser= $this->db->select('*')->from('tbl_pegawai')->where('nip', $data['nomor_induk'])->where('status_id', 1)
+        //             ->get()->row();
+        //     } else {
+        //         return array('status' => 400, 'message' => 'invalid user_type!');
+        //     }
+        //
+        //     if($datauser == "" || $datauser == null) {
+        //         return array('status'=> 400, 'message' => 'data with field \'nomor_induk\' = '.$data['nomor_induk'].' not found.');
+        //     } else {
+        //         $newdata = new StdClass();
+        //         $newdata->nomor_induk = $data['nomor_induk'];
+        //         $newdata->status_id = 0;
+        //         $newdata = $this->crud_info_std($newdata, "delete");
+        //         $this->db->where('nomor_induk',$newdata->nomor_induk)->where('status_id', 1)->update('tbl_pengguna', $newdata);
+        //         return array('status'=> 200, 'data'=> 'succesfully delete');
+        //     }
+        // }
     }
 
     public function crud_info($data, $type = null) {
@@ -584,17 +591,18 @@ class Api_model extends CI_Model {
         return $data;
     }
 
+// Check nomor kartu
     public function check_nomor_induk($nomor_induk) {
-        $q = $this->db->select('*')->from('tbl_pengguna')->where('nomor_induk', $nomor_induk)->where('status_id', 1)
+        $q = $this->db->select('*')->from('tbl_pengguna')->where('no_kartu', $nomor_induk)->where('status_id', 1) // update using nomor_kartu
             ->get()->row();
         if($q == "") {
             return array('status' => 401,'message' => 'kartu tidak terdaftar');
         } else {
             if($q->id_type == 1) {
-                $q = $this->db->select('*')->from('tbl_mahasiswa')->where('nim', $nomor_induk)->where('status_id', 1)
+                $q = $this->db->select('*')->from('tbl_mahasiswa')->where('nim', $q->nomor_induk)->where('status_id', 1)
                     ->get()->row();
             } else {
-                $q = $this->db->select('*')->from('tbl_pegawai')->where('nip', $nomor_induk)->where('status_id', 1)
+                $q = $this->db->select('*')->from('tbl_pegawai')->where('nip', $q->nomor_induk)->where('status_id', 1)
                     ->get()->row();
             }
 
