@@ -599,26 +599,28 @@ class Api_model extends CI_Model {
             return array('status' => 401,'message' => 'kartu tidak terdaftar');
         } else {
             if($q->id_type == 1) {
-                $q = $this->db->select('*')->from('tbl_mahasiswa')->where('nim', $q->nomor_induk)->where('status_id', 1)
+                $q2 = $this->db->select('*')->from('tbl_mahasiswa')->where('nim', $q->nomor_induk)->where('status_id', 1)
                     ->get()->row();
             } else {
-                $q = $this->db->select('*')->from('tbl_pegawai')->where('nip', $q->nomor_induk)->where('status_id', 1)
+                $q2 = $this->db->select('*')->from('tbl_pegawai')->where('nip', $q->nomor_induk)->where('status_id', 1)
                     ->get()->row();
             }
 
-            if($q == "") {
+            if($q2 == "") {
                 return array('status' => 401,'message' => 'data pengguna tidak terdaftar!');
             } else {
-                return array('status'=> 200);
+                return array('status'=> 200, 'nomor_induk' => $q->nomor_induk);
             }
         }
     }
+
+
 
     public function proses_parkir($data) {
       // $dt = new DateTime();
         if($data['jenis_parkir'] == "masuk") {
             $q = $this->db->select('*')->from('tbl_parkir')
-                ->where('nomor_induk', $data['nomor_induk'])
+                ->where('no_kartu', $data['no_kartu'])
                 ->where('jenis_parkir', 'masuk')
                 ->where('status_id', 1)->get()->row();
             if($q == "") {
@@ -637,7 +639,7 @@ class Api_model extends CI_Model {
         }
         else if($data['jenis_parkir'] == "keluar") {
             $q = $this->db->select('*')->from('tbl_parkir')
-                ->where('nomor_induk', $data['nomor_induk'])
+                ->where('no_kartu', $data['no_kartu'])
                 ->where('jenis_parkir', 'masuk')
                 ->where('status_id', 1)->get()->row();
 
@@ -655,7 +657,7 @@ class Api_model extends CI_Model {
                 );
                 $newData = $this->crud_info($newData, "update");
                 $this->db
-                    ->where('nomor_induk', $data['nomor_induk'])
+                    ->where('no_kartu', $data['no_kartu'])
                     ->where('status_id', 1)
                     ->where('jenis_parkir','masuk')
                     ->update('tbl_parkir', $newData);

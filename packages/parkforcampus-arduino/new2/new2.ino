@@ -71,7 +71,7 @@ bool portalModeKeluar;
 
 String command = "";
 String var1="", var2="", var3="", var4="";
-char sz[] = "writeNewKey;A0A1A2A3A4A5;B0B1B2B3B4B5;313131313131313131313131313131313131313131313131313131313131313131313131313131;B0B1B2B3B4B5";
+char sz[] = "writeNewKey;A0A1A2A3A4A5;B0B1B2B3B4B5;3131313131313131313131313131313131313131313131313131313131313131313131313131313131;B0B1B2B3B4B5";
 //String defaultKeyA = "A0A1A2A3A4A5";
 //String defaultKeyB = "B0B1B2B3B4B5";
 String defaultKeyA = "FFFFFFFFFFFF";
@@ -120,6 +120,7 @@ void loop() {
       command = "";
     }
     if(command == "doRead") {
+      portalMode = false;
       doRead(var1,var2,"");
     }
 
@@ -132,11 +133,13 @@ void loop() {
     }
     
     if(command == "doRead2") {
+      portalMode = false;
       doRead2(var1,var2,"");
     }
     if(command == "writeCard" && var1 != ""&& var2 != ""&& var3 != "") {
        portalModeMasuk = false;
        portalModeKeluar = false;
+       portalMode = false;
        doWrite(var1, var2, var3);
     }
 
@@ -445,14 +448,17 @@ void doRead2(String _keyA, String _keyB, String mode){
 
 
 void doWrite(String _keyA, String _keyB, String value) {
+
+   digitalWrite(RST_PIN, HIGH);   // Get RC522 reader out of hard low power mode
+   mfrc522.PCD_Init(); 
    if ( ! mfrc522.PICC_IsNewCardPresent()) {
-        Serial.println("Please insert your new card ... ");
+        Serial.println("Please insert your new card 1... ");
         delay(1000);
         return;
     }
     // Select one of the cards
     if ( ! mfrc522.PICC_ReadCardSerial()) {
-        Serial.println("Please insert your new card ... ");
+        Serial.println("Please insert your new card 2... ");
         delay(1000);
         return;
     } 

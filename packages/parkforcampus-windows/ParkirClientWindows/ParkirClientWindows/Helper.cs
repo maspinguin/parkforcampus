@@ -16,7 +16,7 @@ namespace ParkirClientWindows
             {
                 string ascii = string.Empty;
 
-                for (int i = 0; i < hexString.Length; i += 2)
+                for (int i = 0; i < hexString.Length - 4; i += 2)
                 {
                     string hs = string.Empty;
 
@@ -65,10 +65,10 @@ namespace ParkirClientWindows
 
             string newString = sb.ToString();
 
-            if (newString.Length < 32)
+            if (newString.Length < 40)
             {
                 string addZero = "";
-                for (int i = 0; i <  32 - newString.Length; i++)
+                for (int i = 0; i <  40 - newString.Length; i++)
                 {
                     addZero += "0";
                 }

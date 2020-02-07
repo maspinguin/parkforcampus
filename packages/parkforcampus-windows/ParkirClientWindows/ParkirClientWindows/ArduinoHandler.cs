@@ -164,19 +164,19 @@ namespace ParkirClientWindows
         {
             
             //Debug.WriteLine("NO:" + ni);
-            string nomor_induk = ni.Trim();
+            string no_kartu = ni.Trim();
             string path = "Apimobile/proses_parkir";
             RestRequest request = Configuration.getHttpConfig(path);
 
             //nomor_induk = Convert.ToString(ni);
             int id = 0;
-            int.TryParse(nomor_induk, out id);
+            int.TryParse(no_kartu, out id);
            
 
             request.AddJsonBody(
                 new
                 {
-                   nomor_induk = id,
+                   no_kartu = id,
                     jenis = jenis
                 }
             );

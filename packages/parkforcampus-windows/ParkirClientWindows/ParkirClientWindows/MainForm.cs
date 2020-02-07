@@ -680,7 +680,7 @@ namespace ParkirClientWindows
         {
             if(e.ColumnIndex == 6)
             {
-                string no_kartu = dataGridViewPengguna.Rows[e.RowIndex].Cells[1].Value.ToString();
+                string no_kartu = dataGridViewPengguna.Rows[e.RowIndex].Cells[4].Value.ToString();
                 //MessageBox.Show(Helper.ASCIItoHex(no_kartu));
                 ArduinoHandler.write(Configuration.SERIALPORT1.serial, "writeCard;" + Configuration.KeyA + ";" + Configuration.KeyB + ";"+Helper.ASCIItoHex(no_kartu), textBoxArduino1, 1);
 
@@ -1567,12 +1567,13 @@ namespace ParkirClientWindows
                    dataGridViewParkir.Rows.Clear();
                    dataGridViewParkir.Refresh();
                    dataGridViewParkir.DataSource = null;
-                   dataGridViewParkir.ColumnCount = 4;
+                   dataGridViewParkir.ColumnCount = 5;
                    dataGridViewParkir.Columns[2].Width = 200;
                    dataGridViewParkir.Columns[0].HeaderText = "ID";
                    dataGridViewParkir.Columns[1].HeaderText = "Nomor Induk";
                    dataGridViewParkir.Columns[2].HeaderText = "Waktu";
                    dataGridViewParkir.Columns[3].HeaderText = "Jenis Parkir";
+                   dataGridViewParkir.Columns[4].HeaderText = "No Kartu";
                    for (int i = 0; i < listParkir.Count; i++)
                    {
 
@@ -1580,7 +1581,8 @@ namespace ParkirClientWindows
                            listParkir[i].id,
                            listParkir[i].nomor_induk,
                            listParkir[i].waktu,
-                           listParkir[i].jenis_parkir
+                           listParkir[i].jenis_parkir,
+                           listParkir[i].no_kartu
                            );
                    }
                });
@@ -1589,12 +1591,13 @@ namespace ParkirClientWindows
                 dataGridViewParkir.Rows.Clear();
                 dataGridViewParkir.Refresh();
                 dataGridViewParkir.DataSource = null;
-                dataGridViewParkir.ColumnCount = 4;
+                dataGridViewParkir.ColumnCount = 5;
                 dataGridViewParkir.Columns[2].Width = 200;
                 dataGridViewParkir.Columns[0].HeaderText = "ID";
                 dataGridViewParkir.Columns[1].HeaderText = "Nomor Induk";
                 dataGridViewParkir.Columns[2].HeaderText = "Waktu";
                 dataGridViewParkir.Columns[3].HeaderText = "Jenis Parkir";
+                dataGridViewParkir.Columns[4].HeaderText = "No Kartu";
                 for (int i = 0; i < listParkir.Count; i++)
                 {
 
@@ -1602,7 +1605,8 @@ namespace ParkirClientWindows
                         listParkir[i].id,
                         listParkir[i].nomor_induk,
                         listParkir[i].waktu,
-                        listParkir[i].jenis_parkir
+                        listParkir[i].jenis_parkir,
+                        listParkir[i].no_kartu
                         );
                 }
             }

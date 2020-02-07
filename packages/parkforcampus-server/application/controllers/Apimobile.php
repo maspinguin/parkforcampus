@@ -628,13 +628,13 @@ class Apimobile extends CI_Controller {
                 if($response['status'] == 200 && $response2['status']== 200){
 
                     $params = json_decode(file_get_contents('php://input'), true);
-                    $nomor_induk = null;
+                    $no_kartu = null;
                     $jenis = null;
 
-                    if(!isset($params['nomor_induk']) || $params['nomor_induk'] == "") {
-                        return json_output(203,array('status' =>203 , 'message'=> 'nomor_induk tidak ada' ));
+                    if(!isset($params['no_kartu']) || $params['no_kartu'] == "") {
+                        return json_output(203,array('status' =>203 , 'message'=> 'no_kartu tidak ada' ));
                     } else {
-                        $nomor_induk = $params['nomor_induk'];
+                        $no_kartu = $params['no_kartu'];
                     }
 
                     if(!isset($params['jenis']) || $params['jenis'] == "") {
@@ -643,14 +643,15 @@ class Apimobile extends CI_Controller {
                         $jenis = $params['jenis'];
                     }
 
-                    $resp1 = $this->Api_model->check_nomor_induk($nomor_induk);
+                    $resp1 = $this->Api_model->check_nomor_induk($no_kartu);
                     if($resp1['status'] != 200) {
                         return json_output(400, $resp1);
                     }
                     else {
                         $newData = array(
                             'jenis_parkir' => $jenis,
-                            'nomor_induk' => $nomor_induk
+                            'no_kartu' => $no_kartu,
+														'nomor_induk' => $resp1['nomor_induk']
                         );
 
                         $resp = array('data' => $this->Api_model->proses_parkir($newData));

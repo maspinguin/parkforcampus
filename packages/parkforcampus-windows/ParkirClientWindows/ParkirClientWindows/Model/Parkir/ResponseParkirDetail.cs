@@ -11,6 +11,7 @@ namespace ParkirClientWindows.Model
         public int id { get; set; }
         public int status_id { get; set; }
         public string nomor_induk { get; set; }
+        public string no_kartu { get; set; }
         public string jenis_parkir { get; set; }
        
         public string waktu { get; set; }

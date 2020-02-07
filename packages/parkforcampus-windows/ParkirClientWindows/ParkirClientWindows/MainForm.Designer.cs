@@ -594,7 +594,7 @@
             "semua",
             "masuk",
             "keluar"});
-            this.comboBoxParkir_filter.Location = new System.Drawing.Point(3, 8);
+            this.comboBoxParkir_filter.Location = new System.Drawing.Point(3, 7);
             this.comboBoxParkir_filter.Name = "comboBoxParkir_filter";
             this.comboBoxParkir_filter.Size = new System.Drawing.Size(121, 24);
             this.comboBoxParkir_filter.TabIndex = 10;
@@ -819,7 +819,7 @@
             "Pegawai",
             "Satpam",
             "Admin"});
-            this.comboBoxPengguna_filter.Location = new System.Drawing.Point(195, 7);
+            this.comboBoxPengguna_filter.Location = new System.Drawing.Point(195, 8);
             this.comboBoxPengguna_filter.Name = "comboBoxPengguna_filter";
             this.comboBoxPengguna_filter.Size = new System.Drawing.Size(121, 24);
             this.comboBoxPengguna_filter.TabIndex = 10;
